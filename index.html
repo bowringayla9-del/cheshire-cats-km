@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cats vs Stairs</title>
+<title>Cats on the Run</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -135,16 +135,10 @@
   .bar-fill{ background: linear-gradient(90deg, var(--pink-dim), var(--pink)); height: 100%; border-radius: 6px; }
   .empty{ color: var(--text-dim); font-size: 14px; text-align:center; padding: 18px 0; }
 
-  .stairs{ display:flex; align-items:flex-end; justify-content:center; margin-top: 34px; }
-  .step{ width: 48px; background: var(--surface-2); border-top: 3px solid var(--pink-dim); position: relative; }
-  .step:nth-child(1){ height: 14px; }
-  .step:nth-child(2){ height: 28px; }
-  .step:nth-child(3){ height: 42px; }
-  .step:nth-child(4){ height: 56px; }
-  .step:nth-child(5){ height: 70px; }
-  .step:nth-child(6){ height: 84px; }
-  .step .topcat{ position:absolute; bottom: 100%; left: 50%; transform: translateX(-50%); font-size: 30px; line-height: 1; }
-  .stairs-note{ text-align:center; font-size: 12px; color: var(--text-dim); margin-top: 10px; font-family: 'Fredoka', sans-serif; }
+  .runner{ text-align:center; font-size: 30px; margin-top: 34px; margin-bottom: 8px; letter-spacing: 4px; }
+  .finish{ height: 26px; border-radius: 6px; opacity: .9;
+    background: repeating-conic-gradient(var(--white) 0% 25%, #1b0f20 0% 50%) 0 0 / 26px 26px; }
+  .finish-note{ text-align:center; font-size: 12px; color: var(--text-dim); margin-top: 10px; font-family: 'Fredoka', sans-serif; }
 
   .foot-note{ font-size: 11px; color: var(--text-dim); line-height: 1.6; text-align:center; margin-top: 20px; }
 
@@ -161,7 +155,7 @@
 <body>
 <div class="wrap">
   <div class="eyebrow">Team Cheshire Cats · nine lives, zero chill</div>
-  <h1>Cats <span class="pink">vs</span> Stairs</h1>
+  <h1>Cats <span class="pink">on the</span> Run</h1>
   <div class="parade" aria-hidden="true">
     <span class="c">🐱</span><span class="c">😼</span><span class="c">🐈</span><span class="c">😹</span>
     <span class="c">🙀</span><span class="c">😸</span><span class="c">🐈‍⬛</span><span class="c">😻</span>
@@ -185,15 +179,15 @@
     <div class="hero-stats">
       <div>
         <div class="total-num" id="totalNum">0</div>
-        <div class="total-label" id="totalLabel">team climbs · 0 cats</div>
+        <div class="total-label" id="totalLabel">team km completed · 0 cats</div>
       </div>
-      <div class="goal-edit">goal<br><input type="number" id="goalInput" min="1" value="500"> climbs</div>
+      <div class="goal-edit">goal<br><input type="number" id="goalInput" min="1" value="500"> km</div>
     </div>
-    <div class="quip" id="quip">The stairs are not worried yet.</div>
+    <div class="quip" id="quip">The finish line is not worried yet.</div>
   </div>
 
   <div class="panel">
-    <h2><span class="dot"></span>Paw in your climbs 🐾</h2>
+    <h2><span class="dot"></span>Paw in your km 🐾</h2>
     <label class="field-label">Which cat is this?</label>
     <div class="row">
       <select id="nameSelect"></select>
@@ -204,13 +198,13 @@
       <button class="btn btn-pink" id="joinBtn" type="button">Join the clowder</button>
     </div>
     <div class="quick">
-      <button class="btn" data-add="1" type="button">+1 climb 🐾</button>
-      <button class="btn" data-add="2" type="button">+2 climbs 😼</button>
-      <button class="btn" data-add="5" type="button">+5 climbs 😹</button>
-      <button class="btn" data-add="10" type="button">+10 climbs 🙀</button>
+      <button class="btn" data-add="1" type="button">+1 km 🐾</button>
+      <button class="btn" data-add="2" type="button">+2 km 😼</button>
+      <button class="btn" data-add="5" type="button">+5 km 😹</button>
+      <button class="btn" data-add="10" type="button">+10 km 🙀</button>
     </div>
     <div class="row" style="margin-bottom:0">
-      <input type="number" id="customKm" placeholder="Custom climbs (e.g. 3)" min="0" step="1">
+      <input type="number" id="customKm" placeholder="Custom km (e.g. 3.4)" min="0" step="0.1">
       <button class="btn btn-pink" id="customBtn" type="button">Add</button>
     </div>
   </div>
@@ -220,14 +214,11 @@
     <div id="leaderboard"><div class="empty">No cats have shown up. Suspicious. Probably napping. 😴</div></div>
   </div>
 
-  <div class="stairs" aria-hidden="true">
-    <div class="step"></div><div class="step"></div><div class="step"></div>
-    <div class="step"></div><div class="step"></div>
-    <div class="step"><span class="topcat">😼</span></div>
-  </div>
-  <div class="stairs-note">The stairs. They have no idea what's coming.</div>
+  <div class="runner" aria-hidden="true">💨🐈 😼💨 🏁</div>
+  <div class="finish" aria-hidden="true"></div>
+  <div class="finish-note">The finish line has no idea what's coming.</div>
 
-  <div class="foot-note">Everyone sees the same totals. No login, so log climbs under your own name. Sitting on the keyboard doesn't count. Made a mistake? Hit the ✎ and fix it, we won't tell the other cats.</div>
+  <div class="foot-note">Everyone sees the same totals. No login, so log km under your own name. Sitting on the keyboard doesn't count. Made a mistake? Hit the ✎ and fix it, we won't tell the other cats.</div>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -254,21 +245,21 @@
   }
   function esc(s){ return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
   const fmt = n => Math.round(n * 10) / 10;
-  const unit = n => n === 1 ? 'climb' : 'climbs';
+  const unit = () => 'km';
 
   function tagFor(i, n, total){
     if(total <= 0) return 'still napping';
-    if(i === 0) return 'top cat · stairs fear them';
+    if(i === 0) return 'top cat · fastest paws';
     if(n > 2 && i === n - 1) return 'nap enthusiast';
-    return 'certified stair menace';
+    return 'certified track menace';
   }
   function quipFor(pct){
-    if(pct <= 0) return 'The stairs are not worried yet.';
-    if(pct < 0.25) return 'The stairs are starting to sweat.';
-    if(pct < 0.5) return 'The stairs called for backup. It was just more stairs.';
-    if(pct < 0.75) return 'The stairs are filing a complaint with the landlord.';
-    if(pct < 1) return 'The stairs are begging for mercy. Cats are not merciful.';
-    return 'STAIRS DEFEATED. Everyone nap, you earned it. 🏆';
+    if(pct <= 0) return 'The finish line is not worried yet.';
+    if(pct < 0.25) return 'The finish line is starting to sweat.';
+    if(pct < 0.5) return 'The finish line called for backup. It was just more running.';
+    if(pct < 0.75) return 'The finish line is asking to be moved further away.';
+    if(pct < 1) return 'The finish line is begging for mercy. Cats are not merciful.';
+    return 'FINISH LINE CROSSED. Everyone nap, you earned it. 🏆';
   }
 
   // Track: fixed dash offset puts the start at the white line; dash length grows clockwise.
@@ -284,7 +275,7 @@
     const total = state.roster.reduce((s,n)=> s + (state.members[n] ? state.members[n].total : 0), 0);
     $('totalNum').textContent = fmt(total);
     const c = state.roster.length;
-    $('totalLabel').textContent = `team climbs · ${c} cat${c===1?'':'s'}`;
+    $('totalLabel').textContent = `team km completed · ${c} cat${c===1?'':'s'}`;
     const pct = Math.max(0, Math.min(1, state.goal > 0 ? total / state.goal : 0));
     const filled = ringLength * pct;
     trackFill.style.strokeDasharray = `${filled} ${Math.max(0, ringLength - filled)}`;
@@ -360,7 +351,7 @@
 
   async function addKm(name, km){
     if(!name){ toast('Pick or add your name first.'); return; }
-    if(!(km > 0)){ toast('Enter a number above 0. Napping is not a climb.'); return; }
+    if(!(km > 0)){ toast('Enter a number above 0. Napping is not a distance.'); return; }
     if(!(await ensureMember(name))) return;
     try{
       const { data, error } = await sb.from('cc_members').select('total_km,log').eq('name', name).maybeSingle();
@@ -372,11 +363,11 @@
       state.members[name] = { total, log };
       renderAll();
       toast(`+${fmt(km)} ${unit(km)} · ` + pick([
-        `${name} just scared a staircase.`,
-        `${name}: the stairs never saw it coming.`,
+        `${name} just scared a pigeon off the path.`,
+        `${name}: the finish line never saw it coming.`,
         `${name} did that with zero zoomies.`,
         `Nine lives, ${fmt(km)} ${unit(km)}. ${name} is thriving.`,
-        `${name} climbs like the stairs owe them money.`
+        `${name} runs like the track owes them money.`
       ]));
     }catch(e){ console.error(e); toast('Could not save that. Try again.'); }
   }
