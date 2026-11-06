@@ -133,6 +133,8 @@
   .board-top{ display:flex; justify-content: space-between; align-items:center; font-size: 14px; margin-bottom: 5px; gap: 8px; }
   .board-name{ font-weight: 600; min-width: 0; }
   .tag{ display:block; font-size: 11px; font-weight: 500; color: var(--text-dim); }
+  .member-time{ display:block; margin-top:3px; font-size:11px; font-weight:500; color:var(--pink-soft); }
+  .team-time-label{ margin-top:4px; color:var(--pink-soft); }
   .total-wrap, .edit-row{ display:flex; align-items:center; gap: 6px; flex-shrink: 0; }
   .board-total{ font-family: 'JetBrains Mono', monospace; color: var(--pink-soft); }
   .icon-btn{ background:none; border:none; cursor:pointer; font-size: 14px; padding: 0 2px; line-height:1; color: var(--pink-soft); opacity: .7; }
@@ -189,6 +191,7 @@
       <div>
         <div class="total-num" id="totalNum">0</div>
         <div class="total-label" id="totalLabel">team km completed · 0 cats</div>
+        <div class="total-label team-time-label" id="teamTimeLabel">total running time · 0m</div>
       </div>
       <div class="goal-edit">goal<br><input type="number" id="goalInput" min="1" value="500"> km</div>
     </div>
@@ -277,6 +280,30 @@
     return `${mins}:${String(secs).padStart(2,'0')}`;
   }
 
+  // Read durations from the existing run log without changing stored records.
+  // Older distance-only entries have no duration and are intentionally not guessed.
+  function getLoggedMinutes(log){
+    return (Array.isArray(log) ? log : []).reduce((sum, entry)=>{
+      if(!entry || typeof entry !== 'object') return sum;
+      const duration = Number(entry.duration_minutes);
+      if(Number.isFinite(duration) && duration > 0) return sum + duration;
+      const hours = Number(entry.hours);
+      const minutes = Number(entry.minutes);
+      if(Number.isFinite(hours) && hours >= 0 && Number.isFinite(minutes) && minutes >= 0)
+        return sum + hours * 60 + minutes;
+      return sum;
+    }, 0);
+  }
+
+  function formatDuration(totalMinutes){
+    const mins = Math.max(0, Math.round(Number(totalMinutes) || 0));
+    const hours = Math.floor(mins / 60);
+    const remainder = mins % 60;
+    if(hours && remainder) return `${hours}h ${remainder}m`;
+    if(hours) return `${hours}h`;
+    return `${remainder}m`;
+  }
+
   function getRunDetails(){
     const km = parseFloat($('customKm').value);
     const hoursRaw = $('runHours').value.trim();
@@ -351,6 +378,9 @@
     $('totalNum').textContent = fmt(total);
     const c = state.roster.length;
     $('totalLabel').textContent = `team km completed · ${c} cat${c===1?'':'s'}`;
+    const teamMinutes = state.roster.reduce((sum, name)=>
+      sum + getLoggedMinutes(state.members[name] ? state.members[name].log : []), 0);
+    $('teamTimeLabel').textContent = `total running time · ${formatDuration(teamMinutes)}`;
     const pct = Math.max(0, Math.min(1, state.goal > 0 ? total / state.goal : 0));
     const filled = ringLength * pct;
     trackFill.style.strokeDasharray = `${filled} ${Math.max(0, ringLength - filled)}`;
@@ -381,7 +411,7 @@
         <div class="avatar">${i === 0 && r.total > 0 ? '👑' : catFor(r.name)}</div>
         <div class="board-main">
           <div class="board-top">
-            <span class="board-name">${esc(r.name)}<span class="tag">${tagFor(i, rows.length, r.total)}</span></span>
+            <span class="board-name">${esc(r.name)}<span class="tag">${tagFor(i, rows.length, r.total)}</span><span class="member-time">${formatDuration(getLoggedMinutes(state.members[r.name] ? state.members[r.name].log : []))} running</span></span>
             ${editingName === r.name ? `
               <span class="edit-row">
                 <input type="number" class="edit-input" id="editInput" value="${r.total}" step="0.1" min="0">
@@ -440,7 +470,7 @@
         minutes: run.minutes,
         duration_minutes: run.durationMinutes,
         pace_seconds_per_km: run.paceSecondsPerKm
-      }]).slice(-25);
+      }]);
       const up = await sb.from('cc_members').update({ total_km: total, log }).eq('name', name);
       if(up.error) throw up.error;
       state.members[name] = { total, log };
