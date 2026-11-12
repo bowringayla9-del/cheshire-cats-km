@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cats on the Run</title>
+<title>Task Three: Full-Scale Offensive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -22,11 +22,8 @@
   }
   *{ box-sizing: border-box; }
   body{
-    margin: 0;
-    min-height: 100vh;
-    padding: 28px 16px 80px;
-    color: var(--white);
-    font-family: 'Inter', sans-serif;
+    margin: 0; min-height: 100vh; padding: 28px 16px 80px;
+    color: var(--white); font-family: 'Inter', sans-serif;
     background:
       repeating-linear-gradient(115deg, rgba(255,79,163,0.07) 0 14px, transparent 14px 40px),
       radial-gradient(900px 500px at 50% -10%, #3a1d45 0%, var(--bg) 60%);
@@ -34,140 +31,126 @@
   .wrap{ max-width: 640px; margin: 0 auto; }
 
   .eyebrow{
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--pink-soft); font-weight: 700;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--pink-soft); font-weight: 700;
   }
   h1{
-    font-family: 'Fredoka', sans-serif;
-    font-weight: 700; font-size: 46px; line-height: 1;
-    margin: 4px 0 10px; color: var(--white);
+    font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 42px; line-height: 1.02;
+    margin: 6px 0 10px; color: var(--white);
   }
-  h1 .pink{ color: var(--pink); font-size: 0.6em; vertical-align: 0.15em; padding: 0 2px; }
+  h1 .pink{ color: var(--pink); }
 
   .parade{ font-size: 24px; margin: 0 0 18px; display:flex; flex-wrap: wrap; gap: 6px; align-items:center; }
   .parade .c{ display:inline-block; animation: hop 2.2s ease-in-out infinite; }
-  .parade .c:nth-child(2){ animation-delay: .15s; }
-  .parade .c:nth-child(3){ animation-delay: .3s; }
-  .parade .c:nth-child(4){ animation-delay: .45s; }
-  .parade .c:nth-child(5){ animation-delay: .6s; }
-  .parade .c:nth-child(6){ animation-delay: .75s; }
-  .parade .c:nth-child(7){ animation-delay: .9s; }
+  .parade .c:nth-child(2){ animation-delay: .15s; } .parade .c:nth-child(3){ animation-delay: .3s; }
+  .parade .c:nth-child(4){ animation-delay: .45s; } .parade .c:nth-child(5){ animation-delay: .6s; }
+  .parade .c:nth-child(6){ animation-delay: .75s; } .parade .c:nth-child(7){ animation-delay: .9s; }
   .parade .c:nth-child(8){ animation-delay: 1.05s; }
   @keyframes hop{ 0%,70%,100%{ transform: translateY(0); } 85%{ transform: translateY(-7px); } }
   @media (prefers-reduced-motion: reduce){ .parade .c{ animation: none; } }
 
-  .hero{
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 20px;
-    overflow: hidden;
-    position: relative;
-  }
+  .hero{ background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 20px; overflow: hidden; }
   .track-svg{ width: 100%; height: auto; display: block; }
-  .hero-stats{ display:flex; justify-content: space-between; align-items: flex-end; margin-top: -6px; }
-  .total-num{
-    font-family: 'JetBrains Mono', monospace; font-weight: 700;
-    font-size: 44px; line-height: 1; color: var(--pink);
-  }
+  .hero-stats{ display:flex; justify-content: space-between; align-items: flex-end; margin-top: -6px; gap: 12px; }
+  .total-num{ font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 44px; line-height: 1; color: var(--pink); }
   .total-label{ font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
-  .goal-edit{ font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-dim); text-align: right; }
+  .meta{ font-size: 12px; color: var(--text-dim); margin-top: 3px; }
+  .goal-edit{ font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-dim); text-align: right; flex-shrink: 0; }
   .goal-edit input{
-    width: 74px; background: var(--surface-2); border: 1px solid var(--border);
-    border-radius: 8px; color: var(--white); font-family: 'JetBrains Mono', monospace;
-    font-size: 13px; padding: 3px 6px; text-align: right;
+    width: 74px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--white); font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 3px 6px; text-align: right;
   }
   .quip{
-    margin-top: 16px; text-align: center; font-family: 'Fredoka', sans-serif;
-    font-size: 16px; color: var(--pink-soft); background: var(--surface-2);
-    border-radius: 14px; padding: 10px 14px;
+    margin-top: 16px; text-align: center; font-family: 'Fredoka', sans-serif; font-size: 16px;
+    color: var(--pink-soft); background: var(--surface-2); border-radius: 14px; padding: 10px 14px;
   }
 
-  .panel{
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 24px; padding: 22px; margin-top: 18px;
-  }
-  .panel h2{
-    font-family: 'Fredoka', sans-serif; font-size: 22px; font-weight: 600;
-    margin: 0 0 14px; display:flex; align-items:center; gap: 8px;
-  }
+  .panel{ background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 22px; margin-top: 18px; }
+  .panel h2{ font-family: 'Fredoka', sans-serif; font-size: 22px; font-weight: 600; margin: 0 0 14px; display:flex; align-items:center; gap: 8px; }
   .dot{ width: 10px; height: 10px; border-radius: 50%; background: var(--pink); display:inline-block; }
 
-  .field-label{ display:block; font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
-  .row{ display:flex; gap: 8px; margin-bottom: 14px; }
-  select, input[type=text], input[type=number]{
-    flex: 1; min-width: 0; background: var(--surface-2); border: 1px solid var(--border);
-    color: var(--white); border-radius: 12px; padding: 10px 12px; font-size: 15px; font-family: 'Inter', sans-serif;
-  }
-  select:focus, input:focus{ outline: 2px solid var(--pink); outline-offset: 1px; }
+  details.brief summary{ cursor: pointer; font-family: 'Fredoka', sans-serif; font-size: 20px; font-weight: 600; list-style: none; display:flex; align-items:center; gap: 8px; }
+  details.brief summary::-webkit-details-marker{ display:none; }
+  details.brief summary::after{ content: '＋'; margin-left: auto; color: var(--pink-soft); }
+  details.brief[open] summary::after{ content: '－'; }
+  .brief-body{ margin-top: 14px; font-size: 14px; line-height: 1.6; color: var(--white); }
+  .brief-body p{ margin: 0 0 10px; }
+  .pts-table{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
+  .pts-table div{ background: var(--surface-2); border-radius: 12px; padding: 10px; text-align:center; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+  .pts-table b{ display:block; color: var(--pink); font-size: 20px; }
+  .sig{ color: var(--pink-soft); font-family: 'Fredoka', sans-serif; }
 
-  .time-fields{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
-  .time-field{ min-width: 0; }
-  .time-field input{ width:100%; min-height: 43px; }
-  .pace-preview{
-    display:flex; justify-content:space-between; align-items:center; gap:12px;
-    background:var(--surface-2); border:1px solid var(--border); border-radius:12px;
-    padding:12px 14px; margin: 0 0 14px;
+  .field-label{ display:block; font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  input[type=text], input[type=number]{
+    width: 100%; background: var(--surface-2); border: 1px solid var(--border); color: var(--white);
+    border-radius: 12px; padding: 11px 12px; font-size: 15px; font-family: 'Inter', sans-serif;
   }
-  .pace-preview-label{ font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.08em; }
-  .pace-preview-value{ font-family:'JetBrains Mono',monospace; color:var(--pink-soft); font-weight:700; font-size:16px; }
+  input:focus{ outline: 2px solid var(--pink); outline-offset: 1px; }
+
+  .chips{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+  .chip{
+    background: var(--surface-2); border: 2px solid var(--border); border-radius: 16px; padding: 12px 6px;
+    color: var(--white); cursor: pointer; font-family: 'Fredoka', sans-serif; font-size: 22px; font-weight: 600;
+    transition: transform .08s ease, border-color .15s ease, background .15s ease;
+  }
+  .chip small{ display:block; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; color: var(--text-dim); }
+  .chip:active{ transform: scale(0.96); }
+  .chip[aria-pressed="true"]{ background: var(--pink); border-color: var(--pink); color: #2a0a1a; }
+  .chip[aria-pressed="true"] small{ color: #4a1030; }
+
+  .vest{
+    display:flex; align-items:center; gap: 12px; background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 12px 14px; cursor: pointer; margin-bottom: 14px; font-size: 14px; line-height: 1.35;
+  }
+  .vest input{ width: 22px; height: 22px; accent-color: var(--pink); flex-shrink: 0; margin: 0; }
+  .vest b{ color: var(--pink-soft); }
+
+  .preview{ font-family: 'Fredoka', sans-serif; font-size: 18px; text-align:center; margin-bottom: 12px; color: var(--white); }
+  .preview b{ color: var(--pink); font-size: 26px; }
+  .warn{ font-size: 13px; color: var(--pink-soft); text-align:center; margin-bottom: 10px; min-height: 0; }
 
   .btn{
-    border: 1px solid var(--border); border-radius: 12px; padding: 10px 16px;
-    font-family: 'Inter', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer;
-    color: var(--white); background: var(--surface-2); transition: transform .08s ease, background .15s ease;
+    border: 1px solid var(--border); border-radius: 14px; padding: 13px 16px; width: 100%;
+    font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px; cursor: pointer;
+    color: #2a0a1a; background: var(--pink); border-color: var(--pink); transition: transform .08s ease, background .15s ease;
   }
-  .btn:hover{ background: #40244b; }
-  .btn:active{ transform: scale(0.95) rotate(-1deg); }
-  .btn-pink{ background: var(--pink); border-color: var(--pink); color: #2a0a1a; font-weight: 700; }
-  .btn-pink:hover{ background: #ff6bb2; }
-  .btn-block{ width:100%; }
-  .hidden{ display:none; }
+  .btn:hover{ background: #ff6bb2; }
+  .btn:active{ transform: scale(0.97) rotate(-1deg); }
 
   .board-row{ display:flex; align-items:center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
   .board-row:last-child{ border-bottom: none; }
-  .rank{ font-family: 'JetBrains Mono', monospace; color: var(--text-dim); font-size: 13px; width: 16px; flex-shrink: 0; }
+  .rank{ font-family: 'JetBrains Mono', monospace; color: var(--text-dim); font-size: 13px; width: 18px; flex-shrink: 0; }
   .avatar{ font-size: 24px; width: 30px; text-align:center; flex-shrink: 0; }
   .board-main{ flex:1; min-width:0; }
   .board-top{ display:flex; justify-content: space-between; align-items:center; font-size: 14px; margin-bottom: 5px; gap: 8px; }
   .board-name{ font-weight: 600; min-width: 0; }
   .tag{ display:block; font-size: 11px; font-weight: 500; color: var(--text-dim); }
-  .member-time{ display:block; margin-top:3px; font-size:11px; font-weight:500; color:var(--pink-soft); }
-  .team-time-label{ margin-top:4px; color:var(--pink-soft); }
-  .total-wrap, .edit-row{ display:flex; align-items:center; gap: 6px; flex-shrink: 0; }
+  .total-wrap{ display:flex; align-items:center; gap: 6px; flex-shrink: 0; }
   .board-total{ font-family: 'JetBrains Mono', monospace; color: var(--pink-soft); }
   .icon-btn{ background:none; border:none; cursor:pointer; font-size: 14px; padding: 0 2px; line-height:1; color: var(--pink-soft); opacity: .7; }
   .icon-btn:hover{ opacity: 1; }
-  .edit-input{
-    width: 74px; flex: none; background: var(--surface-2); border: 1px solid var(--pink);
-    color: var(--white); border-radius: 8px; padding: 2px 6px; font-family: 'JetBrains Mono', monospace; font-size: 13px;
-  }
   .bar-bg{ background: var(--surface-2); border-radius: 6px; height: 8px; overflow: hidden; }
   .bar-fill{ background: linear-gradient(90deg, var(--pink-dim), var(--pink)); height: 100%; border-radius: 6px; }
   .empty{ color: var(--text-dim); font-size: 14px; text-align:center; padding: 18px 0; }
 
   .runner{ text-align:center; font-size: 30px; margin-top: 34px; margin-bottom: 8px; letter-spacing: 4px; }
-  .finish{ height: 26px; border-radius: 6px; opacity: .9;
-    background: repeating-conic-gradient(var(--white) 0% 25%, #1b0f20 0% 50%) 0 0 / 26px 26px; }
-  .finish-note{ text-align:center; font-size: 12px; color: var(--text-dim); margin-top: 10px; font-family: 'Fredoka', sans-serif; }
-
-  .foot-note{ font-size: 11px; color: var(--text-dim); line-height: 1.6; text-align:center; margin-top: 20px; }
+  .finish{ height: 26px; border-radius: 6px; opacity: .9; background: repeating-conic-gradient(var(--white) 0% 25%, #1b0f20 0% 50%) 0 0 / 26px 26px; }
+  .finish-note{ text-align:center; font-size: 13px; color: var(--pink-soft); margin-top: 10px; font-family: 'Fredoka', sans-serif; }
+  .foot-note{ font-size: 11px; color: var(--text-dim); line-height: 1.6; text-align:center; margin-top: 18px; }
 
   .toast{
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-    background: var(--surface-2); border: 1px solid var(--pink); color: var(--white);
-    padding: 10px 18px; border-radius: 12px; font-size: 13px; opacity: 0; pointer-events: none;
-    transition: opacity .25s ease; z-index: 50; max-width: 90vw; text-align:center;
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--surface-2);
+    border: 1px solid var(--pink); color: var(--white); padding: 10px 18px; border-radius: 12px; font-size: 13px;
+    opacity: 0; pointer-events: none; transition: opacity .25s ease; z-index: 50; max-width: 90vw; text-align:center;
   }
   .toast.show{ opacity: 1; }
-  @media (max-width: 420px){ h1{ font-size: 38px; } .total-num{ font-size: 36px; } }
+  @media (max-width: 420px){ h1{ font-size: 34px; } .total-num{ font-size: 36px; } }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="eyebrow">Team Cheshire Cats · nine lives, zero chill</div>
-  <h1>Cats <span class="pink">on the</span> Run</h1>
+  <div class="eyebrow">Task Three · Transmission from Alice</div>
+  <h1>Full-Scale <span class="pink">Offensive</span></h1>
   <div class="parade" aria-hidden="true">
     <span class="c">🐱</span><span class="c">😼</span><span class="c">🐈</span><span class="c">😹</span>
     <span class="c">🙀</span><span class="c">😸</span><span class="c">🐈‍⬛</span><span class="c">😻</span>
@@ -190,60 +173,63 @@
     <div class="hero-stats">
       <div>
         <div class="total-num" id="totalNum">0</div>
-        <div class="total-label" id="totalLabel">team km completed · 0 cats</div>
-        <div class="total-label team-time-label" id="teamTimeLabel">total running time · 0m</div>
+        <div class="total-label">team points</div>
+        <div class="meta" id="meta">0 runners · 0 weight vests</div>
       </div>
-      <div class="goal-edit">goal<br><input type="number" id="goalInput" min="1" value="500"> km</div>
+      <div class="goal-edit">goal<br><input type="number" id="goalInput" min="1" value="100"> pts</div>
     </div>
-    <div class="quip" id="quip">The finish line is not worried yet.</div>
+    <div class="quip" id="quip">The Resistance is warming up. Alice is watching.</div>
   </div>
 
   <div class="panel">
-    <h2><span class="dot"></span>Paw in your km 🐾</h2>
-    <label class="field-label" for="nameSelect">Which cat is this?</label>
-    <div class="row">
-      <select id="nameSelect"></select>
-      <button class="btn" id="newBtn" type="button">+ New cat</button>
-    </div>
-    <div class="row hidden" id="newRow">
-      <input type="text" id="newName" placeholder="Your name (cat name optional)" maxlength="30">
-      <button class="btn btn-pink" id="joinBtn" type="button">Join the clowder</button>
-    </div>
-
-    <label class="field-label" for="customKm">Distance (km)</label>
-    <div class="row">
-      <input type="number" id="customKm" placeholder="e.g. 5.0" min="0.01" step="0.01" inputmode="decimal">
-    </div>
-
-    <label class="field-label">Time taken</label>
-    <div class="time-fields">
-      <div class="time-field">
-        <input type="number" id="runHours" placeholder="0" min="0" step="1" inputmode="numeric" aria-label="Hours">
-        <label class="field-label" for="runHours">Hours</label>
+    <details class="brief">
+      <summary>📡 Mission briefing</summary>
+      <div class="brief-body">
+        <p>Distance is what matters, not speed. Run hard, run steady, walk sections if you need to. Your mission is simply to complete your chosen distance.</p>
+        <div class="pts-table">
+          <div><b>3</b>3 km</div><div><b>4</b>4 km</div><div><b>6</b>6 km</div>
+        </div>
+        <p>🦺 Complete your run in an approved <b>5–11 kg weight vest</b> for <b>+3 points</b>. So 4 km + vest = 7 points, and 6 km + vest = 9 points.</p>
+        <p><b>One run score per person.</b> You can run again to challenge yourself, but only one run counts. Choose your route carefully.</p>
+        <p>Make sure your completed run and points are recorded correctly so your team keeps an accurate total.</p>
+        <p class="sig">Choose your distance. Complete your mission. Bring the points home. — Alice 🩵</p>
       </div>
-      <div class="time-field">
-        <input type="number" id="runMinutes" placeholder="30" min="0" max="59" step="1" inputmode="numeric" aria-label="Minutes">
-        <label class="field-label" for="runMinutes">Minutes</label>
-      </div>
+    </details>
+  </div>
+
+  <div class="panel" id="logPanel">
+    <h2><span class="dot"></span>Put your score on the board 🐾</h2>
+    <label class="field-label" for="nameInput">Your name</label>
+    <input type="text" id="nameInput" list="nameList" placeholder="Type your name" maxlength="30" autocomplete="off" style="margin-bottom:14px">
+    <datalist id="nameList"></datalist>
+
+    <label class="field-label">Choose your distance</label>
+    <div class="chips">
+      <button class="chip" type="button" data-dist="3" aria-pressed="false">3 km<small>3 points</small></button>
+      <button class="chip" type="button" data-dist="4" aria-pressed="false">4 km<small>4 points</small></button>
+      <button class="chip" type="button" data-dist="6" aria-pressed="false">6 km<small>6 points</small></button>
     </div>
 
-    <div class="pace-preview" aria-live="polite">
-      <span class="pace-preview-label">Average pace</span>
-      <span class="pace-preview-value" id="pacePreview">--:-- min/km</span>
-    </div>
-    <button class="btn btn-pink btn-block" id="addRunBtn" type="button">Add run 🐈</button>
+    <label class="vest" for="vest">
+      <input type="checkbox" id="vest">
+      <span>🦺 I wore an approved 5–11 kg weight vest <b>(+3 points)</b></span>
+    </label>
+
+    <div class="preview" id="preview">Pick a distance to see your score</div>
+    <div class="warn" id="warn"></div>
+    <button class="btn" id="submitBtn" type="button">Lock in my score</button>
   </div>
 
   <div class="panel">
     <h2><span class="dot" style="background:var(--white)"></span>Cat-egory rankings 👑</h2>
-    <div id="leaderboard"><div class="empty">No cats have shown up. Suspicious. Probably napping. 😴</div></div>
+    <div id="leaderboard"><div class="empty">No scores yet. Suspicious. Probably napping. 😴</div></div>
   </div>
 
   <div class="runner" aria-hidden="true">💨🐈 😼💨 🏁</div>
   <div class="finish" aria-hidden="true"></div>
-  <div class="finish-note">The finish line has no idea what's coming.</div>
+  <div class="finish-note">The Resistance is making its full-scale push. Bring the points home.</div>
 
-  <div class="foot-note">Everyone sees the same totals. No login, so log your run under your own name. Sitting on the keyboard doesn't count. Made a mistake? Hit the ✎ and fix it, we won't tell the other cats.</div>
+  <div class="foot-note">Everyone sees the same board. No login, so use your own name. One score per person: locking in again replaces your old score. Spotted a mistake? Tap ✎ on your row to load it, fix it, and lock it in again.</div>
 </div>
 <div class="toast" id="toast"></div>
 
@@ -254,117 +240,42 @@
   const SUPABASE_KEY = 'sb_publishable_SPtO-5L4vs7SpxTONGF4TA_mOVGzPaD';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+  const VEST_BONUS = 3;
   const $ = id => document.getElementById(id);
   const trackFill = $('trackFill');
-  const state = { roster: [], members: {}, goal: 500 };
-  let ringLength = 0, startShift = 0, editingName = null;
+  const state = { scores: {}, goal: 100 };
+  let ringLength = 0, startShift = 0, selDist = null, armed = null;
 
   const CATS = ['🐱','😼','🐈','😹','🙀','😸','🐈‍⬛','😻','😽','😾','🦁','🐯'];
   const hash = s => { let h = 0; for(const ch of s) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h; };
   const catFor = name => CATS[hash(name) % CATS.length];
   const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+  const calc = (d, v) => d ? d + (v ? VEST_BONUS : 0) : 0;
+  const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
 
   function toast(msg){
     const t = $('toast'); t.textContent = msg; t.classList.add('show');
-    clearTimeout(toast._t); toast._t = setTimeout(()=> t.classList.remove('show'), 2600);
+    clearTimeout(toast._t); toast._t = setTimeout(()=> t.classList.remove('show'), 2800);
   }
   function esc(s){ return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-  const fmt = n => Math.round(n * 10) / 10;
-  const unit = () => 'km';
-
-  function formatPace(secondsPerKm){
-    if(!Number.isFinite(secondsPerKm) || secondsPerKm <= 0) return '--:--';
-    const rounded = Math.round(secondsPerKm);
-    const mins = Math.floor(rounded / 60);
-    const secs = rounded % 60;
-    return `${mins}:${String(secs).padStart(2,'0')}`;
+  function findExisting(name){
+    const low = name.toLowerCase();
+    return Object.keys(state.scores).find(n => n.toLowerCase() === low) || null;
   }
 
-  // Read durations from the existing run log without changing stored records.
-  // Older distance-only entries have no duration and are intentionally not guessed.
-  function getLoggedMinutes(log){
-    return (Array.isArray(log) ? log : []).reduce((sum, entry)=>{
-      if(!entry || typeof entry !== 'object') return sum;
-      const duration = Number(entry.duration_minutes);
-      if(Number.isFinite(duration) && duration > 0) return sum + duration;
-      const hours = Number(entry.hours);
-      const minutes = Number(entry.minutes);
-      if(Number.isFinite(hours) && hours >= 0 && Number.isFinite(minutes) && minutes >= 0)
-        return sum + hours * 60 + minutes;
-      return sum;
-    }, 0);
-  }
-
-  function formatDuration(totalMinutes){
-    const mins = Math.max(0, Math.round(Number(totalMinutes) || 0));
-    const hours = Math.floor(mins / 60);
-    const remainder = mins % 60;
-    if(hours && remainder) return `${hours}h ${remainder}m`;
-    if(hours) return `${hours}h`;
-    return `${remainder}m`;
-  }
-
-  function getRunDetails(){
-    const km = parseFloat($('customKm').value);
-    const hoursRaw = $('runHours').value.trim();
-    const minutesRaw = $('runMinutes').value.trim();
-
-    if(!(km > 0) || !Number.isFinite(km)){
-      return { valid:false, message:'Enter a distance above 0 km.' };
-    }
-    if(hoursRaw === '' && minutesRaw === ''){
-      return { valid:false, message:'Enter the time it took to complete your run.' };
-    }
-
-    const hours = hoursRaw === '' ? 0 : Number(hoursRaw);
-    const minutes = minutesRaw === '' ? 0 : Number(minutesRaw);
-
-    if(!Number.isInteger(hours) || hours < 0){
-      return { valid:false, message:'Enter a valid number of hours.' };
-    }
-    if(!Number.isInteger(minutes) || minutes < 0 || minutes > 59){
-      return { valid:false, message:'Minutes must be between 0 and 59.' };
-    }
-
-    const durationMinutes = hours * 60 + minutes;
-    if(durationMinutes <= 0){
-      return { valid:false, message:'Run time must be more than zero.' };
-    }
-
-    const paceSecondsPerKm = (durationMinutes * 60) / km;
-    return {
-      valid:true,
-      km:Math.round(km * 100) / 100,
-      hours,
-      minutes,
-      durationMinutes,
-      paceSecondsPerKm:Math.round(paceSecondsPerKm)
-    };
-  }
-
-  function updatePacePreview(){
-    const details = getRunDetails();
-    $('pacePreview').textContent = details.valid
-      ? `${formatPace(details.paceSecondsPerKm)} min/km`
-      : '--:-- min/km';
-  }
-
-  function tagFor(i, n, total){
-    if(total <= 0) return 'still napping';
-    if(i === 0) return 'top cat · fastest paws';
-    if(n > 2 && i === n - 1) return 'nap enthusiast';
-    return 'certified track menace';
-  }
   function quipFor(pct){
-    if(pct <= 0) return 'The finish line is not worried yet.';
-    if(pct < 0.25) return 'The finish line is starting to sweat.';
-    if(pct < 0.5) return 'The finish line called for backup. It was just more running.';
-    if(pct < 0.75) return 'The finish line is asking to be moved further away.';
-    if(pct < 1) return 'The finish line is begging for mercy. Cats are not merciful.';
-    return 'FINISH LINE CROSSED. Everyone nap, you earned it. 🏆';
+    if(pct <= 0) return 'The Resistance is warming up. Alice is watching.';
+    if(pct < 0.25) return 'First wave deployed. The Underland has noticed.';
+    if(pct < 0.5) return 'The Red Queen is getting nervous.';
+    if(pct < 0.75) return 'Full-scale push underway. The cats are grinning.';
+    if(pct < 1) return 'Almost there. Bring the points home.';
+    return 'MISSION COMPLETE. The Resistance holds the field. 🏆';
+  }
+  function tagFor(s){
+    return `${s.distance} km${s.vest ? ' + 🦺 weight vest' : ''}`;
   }
 
-  // Track: fixed dash offset puts the start at the white line; dash length grows clockwise.
+  // Track: fixed dash offset starts at the white line; dash length grows clockwise.
   function setupTrack(){
     try{ ringLength = trackFill.getTotalLength(); }catch(e){ ringLength = 900; }
     const w = parseFloat(trackFill.getAttribute('width')) || 0;
@@ -374,13 +285,11 @@
   }
 
   function renderHero(){
-    const total = state.roster.reduce((s,n)=> s + (state.members[n] ? state.members[n].total : 0), 0);
-    $('totalNum').textContent = fmt(total);
-    const c = state.roster.length;
-    $('totalLabel').textContent = `team km completed · ${c} cat${c===1?'':'s'}`;
-    const teamMinutes = state.roster.reduce((sum, name)=>
-      sum + getLoggedMinutes(state.members[name] ? state.members[name].log : []), 0);
-    $('teamTimeLabel').textContent = `total running time · ${formatDuration(teamMinutes)}`;
+    const list = Object.values(state.scores);
+    const total = list.reduce((s, r) => s + r.points, 0);
+    const vests = list.filter(r => r.vest).length;
+    $('totalNum').textContent = total;
+    $('meta').textContent = `${plural(list.length, 'runner')} · ${plural(vests, 'weight vest')}`;
     const pct = Math.max(0, Math.min(1, state.goal > 0 ? total / state.goal : 0));
     const filled = ringLength * pct;
     trackFill.style.strokeDasharray = `${filled} ${Math.max(0, ringLength - filled)}`;
@@ -388,169 +297,140 @@
     $('goalInput').value = state.goal;
   }
 
-  function renderSelect(){
-    const sel = $('nameSelect'); const cur = sel.value; sel.innerHTML = '';
-    if(!state.roster.length){
-      const o = document.createElement('option'); o.value=''; o.textContent='No cats yet, add one'; sel.appendChild(o); return;
-    }
-    state.roster.slice().sort((a,b)=> a.localeCompare(b)).forEach(n=>{
-      const o = document.createElement('option'); o.value = n; o.textContent = catFor(n) + ' ' + n; sel.appendChild(o);
-    });
-    if(cur && state.roster.includes(cur)) sel.value = cur;
+  function renderNames(){
+    $('nameList').innerHTML = Object.keys(state.scores).sort((a,b)=> a.localeCompare(b))
+      .map(n => `<option value="${esc(n)}"></option>`).join('');
   }
 
   function renderBoard(){
     const el = $('leaderboard');
-    if(!state.roster.length){ el.innerHTML = '<div class="empty">No cats have shown up. Suspicious. Probably napping. 😴</div>'; return; }
-    const rows = state.roster.map(n => ({ name: n, total: state.members[n] ? state.members[n].total : 0 }))
-                             .sort((a,b)=> b.total - a.total);
-    const max = Math.max(...rows.map(r=>r.total), 1);
+    const rows = Object.entries(state.scores).map(([name, s]) => ({ name, ...s }))
+      .sort((a,b)=> b.points - a.points || a.name.localeCompare(b.name));
+    if(!rows.length){ el.innerHTML = '<div class="empty">No scores yet. Suspicious. Probably napping. 😴</div>'; return; }
+    const max = Math.max(...rows.map(r => r.points), 1);
     el.innerHTML = rows.map((r,i)=>`
       <div class="board-row">
         <div class="rank">${i+1}</div>
-        <div class="avatar">${i === 0 && r.total > 0 ? '👑' : catFor(r.name)}</div>
+        <div class="avatar">${i === 0 ? '👑' : catFor(r.name)}</div>
         <div class="board-main">
           <div class="board-top">
-            <span class="board-name">${esc(r.name)}<span class="tag">${tagFor(i, rows.length, r.total)}</span><span class="member-time">${formatDuration(getLoggedMinutes(state.members[r.name] ? state.members[r.name].log : []))} running</span></span>
-            ${editingName === r.name ? `
-              <span class="edit-row">
-                <input type="number" class="edit-input" id="editInput" value="${r.total}" step="0.1" min="0">
-                <button class="icon-btn" data-save="${esc(r.name)}" type="button" title="Save">✓</button>
-                <button class="icon-btn" data-cancel type="button" title="Cancel">✕</button>
-              </span>` : `
-              <span class="total-wrap">
-                <span class="board-total">${fmt(r.total)} ${unit(r.total)}</span>
-                <button class="icon-btn" data-edit="${esc(r.name)}" type="button" title="Edit">✎</button>
-              </span>`}
+            <span class="board-name">${esc(r.name)}<span class="tag">${tagFor(r)}</span></span>
+            <span class="total-wrap">
+              <span class="board-total">${r.points} pts</span>
+              <button class="icon-btn" data-edit="${esc(r.name)}" type="button" title="Load to edit">✎</button>
+            </span>
           </div>
-          <div class="bar-bg"><div class="bar-fill" style="width:${(r.total/max*100).toFixed(1)}%"></div></div>
+          <div class="bar-bg"><div class="bar-fill" style="width:${(r.points/max*100).toFixed(1)}%"></div></div>
         </div>
       </div>`).join('');
   }
 
-  function renderAll(){ renderHero(); renderSelect(); renderBoard(); }
+  function renderAll(){ renderHero(); renderNames(); renderBoard(); }
+
+  function renderPreview(){
+    const pts = calc(selDist, $('vest').checked);
+    $('preview').innerHTML = selDist
+      ? `Your score: <b>${pts}</b> point${pts === 1 ? '' : 's'}`
+      : 'Pick a distance to see your score';
+    const name = $('nameInput').value.trim();
+    const ex = name ? findExisting(name) : null;
+    $('warn').textContent = ex ? `${ex} already has ${state.scores[ex].points} points on the board. Locking in again replaces it.` : '';
+  }
+  function disarm(){
+    armed = null; $('submitBtn').textContent = 'Lock in my score'; renderPreview();
+  }
 
   async function loadAll(){
     try{
-      const { data, error } = await sb.from('cc_members').select('*');
+      const { data, error } = await sb.from('cc_t3_scores').select('*');
       if(error) throw error;
-      state.roster = (data||[]).map(r=>r.name);
-      state.members = {};
-      (data||[]).forEach(r=>{ state.members[r.name] = { total: Number(r.total_km)||0, log: r.log||[] }; });
-      const s = await sb.from('cc_settings').select('*').eq('id',1).maybeSingle();
+      state.scores = {};
+      (data || []).forEach(r => {
+        state.scores[r.name] = { distance: r.distance_km, vest: !!r.vest, points: Number(r.points) || calc(r.distance_km, r.vest) };
+      });
+      const s = await sb.from('cc_t3_settings').select('*').eq('id', 1).maybeSingle();
       if(s.error) throw s.error;
-      if(s.data) state.goal = Number(s.data.goal_km) || 500;
+      if(s.data) state.goal = Number(s.data.goal_points) || 100;
     }catch(e){
-      console.error(e); toast('Could not load data. A cat may have unplugged something.');
+      console.error(e); toast('Could not load the scoreboard. Check the Supabase setup.');
     }
     renderAll();
   }
 
-  async function ensureMember(name){
-    if(state.roster.includes(name)) return true;
-    const { error } = await sb.from('cc_members').upsert({ name, total_km: 0, log: [] }, { onConflict: 'name', ignoreDuplicates: true });
-    if(error){ console.error(error); toast('Could not add that name.'); return false; }
-    state.roster.push(name); state.members[name] = { total: 0, log: [] };
-    return true;
-  }
+  async function submit(){
+    const raw = $('nameInput').value.trim().replace(/\s+/g, ' ');
+    if(!raw){ toast('Type your name first. Cats are not allowed to be anonymous.'); return; }
+    if(!selDist){ toast('Choose your distance first.'); return; }
+    const vest = $('vest').checked;
+    const existing = findExisting(raw);
+    const name = existing || raw;
 
-  async function addRun(name, run){
-    if(!name){ toast('Pick or add your name first.'); return; }
-    if(!run || !run.valid){ toast(run && run.message ? run.message : 'Check your run details.'); return; }
-    if(!(await ensureMember(name))) return;
+    if(existing && armed !== name){
+      armed = name;
+      $('submitBtn').textContent = 'Tap again to replace my score';
+      $('warn').textContent = `${name} already has ${state.scores[name].points} points. Only one run counts, so this will replace it.`;
+      return;
+    }
     try{
-      const { data, error } = await sb.from('cc_members').select('total_km,log').eq('name', name).maybeSingle();
+      const { error } = await sb.from('cc_t3_scores').upsert(
+        { name, distance_km: selDist, vest, updated_at: new Date().toISOString() },
+        { onConflict: 'name' }
+      );
       if(error) throw error;
-      const total = Math.round(((data ? Number(data.total_km) : 0) + run.km) * 100) / 100;
-      // Keep the existing log array and append the new timed run. No new table is required.
-      const log = ((data && data.log) || []).concat([{
-        ts: Date.now(),
-        km: run.km,
-        hours: run.hours,
-        minutes: run.minutes,
-        duration_minutes: run.durationMinutes,
-        pace_seconds_per_km: run.paceSecondsPerKm
-      }]);
-      const up = await sb.from('cc_members').update({ total_km: total, log }).eq('name', name);
-      if(up.error) throw up.error;
-      state.members[name] = { total, log };
-      renderAll();
-      $('customKm').value = '';
-      $('runHours').value = '';
-      $('runMinutes').value = '';
-      updatePacePreview();
-      toast(`+${fmt(run.km)} km · ${run.hours}h ${run.minutes}m · ${formatPace(run.paceSecondsPerKm)} min/km. ${pick([
-        `${name} just scared a pigeon off the path.`,
-        `${name}: the finish line never saw it coming.`,
-        `${name} did that with zero zoomies.`,
-        `Nine lives, ${fmt(run.km)} km. ${name} is thriving.`,
-        `${name} runs like the track owes them money.`
-      ])}`);
-    }catch(e){ console.error(e); toast('Could not save that. Try again.'); }
-  }
-
-  async function setTotal(name, km){
-    try{
-      const { error } = await sb.from('cc_members').update({ total_km: km }).eq('name', name);
-      if(error) throw error;
-      state.members[name].total = km; renderAll(); toast(`${name} set to ${fmt(km)} ${unit()}. We saw nothing.`);
-    }catch(e){ console.error(e); toast('Could not update that score.'); }
+      const points = calc(selDist, vest);
+      state.scores[name] = { distance: selDist, vest, points };
+      armed = null; $('submitBtn').textContent = 'Lock in my score';
+      renderAll(); renderPreview();
+      toast(`${name} banks ${points} points. ` + pick([
+        'The Red Queen felt that.',
+        'Alice has been notified.',
+        'The Underland has no idea what hit it.',
+        'Cheshire grin intensifies.',
+        'Points brought home. 🐾'
+      ]));
+    }catch(e){ console.error(e); toast('Could not save that score. Try again.'); }
   }
 
   // ---- wiring ----
-  $('newBtn').addEventListener('click', ()=>{ $('newRow').classList.toggle('hidden'); $('newName').focus(); });
-  async function join(){
-    const name = $('newName').value.trim();
-    if(!name){ toast('Type a name first. Cats are not allowed to be anonymous.'); return; }
-    if(await ensureMember(name)){
-      $('newName').value=''; $('newRow').classList.add('hidden');
-      renderAll(); $('nameSelect').value = name; toast(`${name} has joined the clowder 🐾`);
-    }
-  }
-  $('joinBtn').addEventListener('click', join);
-  $('newName').addEventListener('keydown', e=>{ if(e.key==='Enter') join(); });
+  document.querySelectorAll('.chip').forEach(chip => chip.addEventListener('click', ()=>{
+    selDist = parseInt(chip.dataset.dist, 10);
+    document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', String(c === chip)));
+    disarm();
+  }));
+  $('vest').addEventListener('change', disarm);
+  $('nameInput').addEventListener('input', disarm);
+  $('submitBtn').addEventListener('click', submit);
+  $('nameInput').addEventListener('keydown', e => { if(e.key === 'Enter') submit(); });
 
-  $('addRunBtn').addEventListener('click', ()=>{
-    const run = getRunDetails();
-    if(!run.valid){ toast(run.message); return; }
-    addRun($('nameSelect').value, run);
-  });
-
-  ['customKm','runHours','runMinutes'].forEach(id=>{
-    $(id).addEventListener('input', updatePacePreview);
+  $('leaderboard').addEventListener('click', e => {
+    const b = e.target.closest('[data-edit]');
+    if(!b) return;
+    const name = b.dataset.edit, s = state.scores[name];
+    if(!s) return;
+    $('nameInput').value = name;
+    selDist = s.distance;
+    document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', String(parseInt(c.dataset.dist, 10) === s.distance)));
+    $('vest').checked = s.vest;
+    disarm();
+    $('logPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    toast(`Loaded ${name}'s score. Change it, then lock it in again.`);
   });
 
   let goalT;
   $('goalInput').addEventListener('change', ()=>{
-    const v = parseFloat($('goalInput').value);
+    const v = Math.round(parseFloat($('goalInput').value));
     if(!(v > 0)) return;
     state.goal = v; renderHero();
     clearTimeout(goalT);
     goalT = setTimeout(async ()=>{
-      const { error } = await sb.from('cc_settings').upsert({ id: 1, goal_km: v });
+      const { error } = await sb.from('cc_t3_settings').upsert({ id: 1, goal_points: v });
       if(error){ console.error(error); toast('Could not save the goal.'); }
     }, 400);
   });
 
-  $('leaderboard').addEventListener('click', e=>{
-    const ed = e.target.closest('[data-edit]');
-    if(ed){ editingName = ed.dataset.edit; renderBoard(); const i=$('editInput'); if(i){ i.focus(); i.select(); } return; }
-    if(e.target.closest('[data-cancel]')){ editingName = null; renderBoard(); return; }
-    const sv = e.target.closest('[data-save]');
-    if(sv){
-      const v = parseFloat($('editInput').value);
-      if(isNaN(v) || v < 0){ toast('Enter a valid number.'); return; }
-      editingName = null; setTotal(sv.dataset.save, Math.round(v*100)/100);
-    }
-  });
-  $('leaderboard').addEventListener('keydown', e=>{
-    if(e.target.id !== 'editInput') return;
-    if(e.key === 'Enter'){ const s = document.querySelector('[data-save]'); if(s) s.click(); }
-    if(e.key === 'Escape'){ editingName = null; renderBoard(); }
-  });
-
   setupTrack();
   window.addEventListener('resize', ()=>{ setupTrack(); renderHero(); });
+  renderPreview();
   loadAll();
 })();
 </script>
