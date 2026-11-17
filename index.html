@@ -128,6 +128,10 @@
   .lb-row.first .lb-name::before{ content:'♛ '; color:var(--gold); }
   .lb-kg{ font-size:26px; font-weight:800; flex:none; }
   .lb-kg small{ font-size:13px; color:var(--dim); margin-left:3px; font-weight:700; }
+  .lb-edit{ flex:none; padding:7px 10px; border-radius:9px; border:1px solid var(--gold); background:transparent; color:var(--gold); font:700 11px 'Inter',sans-serif; cursor:pointer; }
+  .lb-edit:hover{ background:rgba(201,162,74,.12); }
+  .lb-edit:disabled{ opacity:.5; cursor:wait; }
+  @media(max-width:420px){ .lb-top{ flex-wrap:wrap; align-items:center; } .lb-name{ flex:1 1 100%; } }
   .bar{ height:7px; border-radius:99px; background:var(--panel-2); margin:9px 0 7px; overflow:hidden; }
   .bar i{ display:block; height:100%; border-radius:99px; background:linear-gradient(90deg,var(--red-dark),var(--red-bright)); transition:width .8s cubic-bezier(.2,.8,.2,1); }
   .lb-row.first .bar i{ background:linear-gradient(90deg,var(--red-bright),var(--gold)); }
@@ -302,7 +306,7 @@
           <label class="fl" id="kgLbl">Kettlebell weight</label>
           <div class="opts w" id="kgOpts" role="group" aria-labelledby="kgLbl"></div>
 
-          <label class="fl" id="qtyLbl">Quantity carried together</label>
+          <label class="fl" id="qtyLbl">How many KBs did you carry?</label>
           <div class="stepper" role="group" aria-labelledby="qtyLbl">
             <button type="button" id="qMinus" aria-label="One fewer">−</button>
             <output class="num" id="qVal" aria-live="polite">1</output>
@@ -310,7 +314,7 @@
           </div>
 
           <label class="fl" for="byInput">Your name (so you appear on Top carriers)</label>
-          <input type="text" id="byInput" maxlength="30" placeholder="Your name" autocomplete="given-name">
+          <input type="text" id="byInput" maxlength="30" placeholder="Enter your name" autocomplete="given-name" required>
 
           <div class="summary">
             <div class="eq num" id="eq">Choose a team and a weight</div>
@@ -376,7 +380,7 @@
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   const TZ = 'Pacific/Auckland';
-  const DEFAULT_WEIGHTS = [8,12,16,20,24,28,32];
+  const DEFAULT_WEIGHTS = [8,10,12,14,16,18,20,24,28,32,36,40];
   const $ = id => document.getElementById(id);
 
   /*PURE-START*/
@@ -435,7 +439,7 @@
   }
   const nzTime = ms => { const p = nzParts(ms); return p.hour + ':' + p.minute; };
   const phase = () => state.settings ? phaseFor(nowMs(), state.settings.start, state.settings.end) : 'before';
-  const weights = () => (state.settings && state.settings.weights && state.settings.weights.length) ? state.settings.weights : DEFAULT_WEIGHTS;
+  const weights = () => DEFAULT_WEIGHTS;
 
   // ---------- rendering ----------
   function renderHeader(){
@@ -478,7 +482,7 @@
       return `<li class="lb-row${r.pos === 1 && top > 0 ? ' first' : ''}">
         <div class="pos num">${r.pos}</div>
         <div>
-          <div class="lb-top"><span class="lb-name">${esc(r.team)}</span><span class="lb-kg num">${fmt(r.total_kg)}<small>kg</small></span></div>
+          <div class="lb-top"><span class="lb-name">${esc(r.team)}</span><button type="button" class="lb-edit" data-edit-name="${esc(r.team)}">Edit number</button><span class="lb-kg num">${fmt(r.total_kg)}<small>kg</small></span></div>
           <div class="bar"><i style="width:${w}%"></i></div>
           <div class="lb-sub num"><span>${fmt(r.carries)} carr${r.carries === 1 ? 'y' : 'ies'}</span><span>${gap}</span></div>
         </div></li>`;
@@ -499,13 +503,13 @@
     renderSummary();
   }
 
-  function canSubmit(){ return !!(selKg && qty >= 1 && !sending && state.ready); }
+  function canSubmit(){ return !!(selKg && qty >= 1 && $('byInput').value.trim() && !sending && state.ready); }
   function renderSummary(){
     const total = selKg ? calcTotal(selKg, qty) : 0;
     $('eq').textContent = selKg ? `${TEAM} · ${selKg} kg × ${qty}` : 'Choose the kettlebell weight';
     $('addKg').innerHTML = '+' + fmt(total) + '<span> kg</span>';
     $('submitBtn').disabled = !canSubmit();
-    $('lockNote').textContent = !selKg ? 'Pick the kettlebell weight.' : '';
+    $('lockNote').textContent = !$('byInput').value.trim() ? 'Enter your name before submitting.' : !selKg ? 'Pick the kettlebell weight.' : '';
   }
 
   function renderAll(){ renderHeader(); renderStatus(); renderStats(); renderBoard(); renderFeed(); renderForm(); }
@@ -553,8 +557,9 @@
   async function confirmCarry(){
     if(sending || !pendingId) return;
     sending = true; $('confirmBtn').disabled = true; $('submitBtn').disabled = true;
-    const by = $('byInput').value.trim().replace(/\s+/g, ' ').slice(0, 30) || null;
-    store.set('c3_by', by || '');
+    const by = $('byInput').value.trim().replace(/\s+/g, ' ').slice(0, 30);
+    if(!by){ toast('Please enter your name before submitting.'); sending = false; $('confirmBtn').disabled = false; renderSummary(); return; }
+    store.set('c3_by', by);
     const added = calcTotal(selKg, qty), label = `${qty > 1 ? qty + ' × ' : ''}${selKg} kg`;
     try{
       const { error } = await sb.from('cc_c3_carries').insert({ id: pendingId, team: TEAM, kettlebell_kg: selKg, quantity: qty, recorded_by: by });
@@ -577,8 +582,25 @@
 
   // ---------- wiring ----------
   $('kgOpts').addEventListener('click', e => { const b = e.target.closest('[data-kg]'); if(!b) return; selKg = parseInt(b.dataset.kg, 10); $('okMsg').hidden = true; renderForm(); });
+  $('byInput').addEventListener('input', () => renderSummary());
   $('qMinus').addEventListener('click', () => { qty = Math.max(1, qty - 1); $('qVal').textContent = qty; renderSummary(); });
   $('qPlus').addEventListener('click', () => { qty = Math.min(20, qty + 1); $('qVal').textContent = qty; renderSummary(); });
+  $('lb').addEventListener('click', async e => {
+    const btn = e.target.closest('[data-edit-name]');
+    if(!btn) return;
+    const name = btn.dataset.editName;
+    const person = state.people.find(p => p.name.toLowerCase() === name.toLowerCase());
+    if(!person) return;
+    const answer = prompt(`Edit ${name}'s total kilograms.\nCurrent total: ${person.total_kg} kg\n\nEnter the corrected total:`, String(person.total_kg));
+    if(answer === null) return;
+    const value = answer.trim();
+    if(!/^\d+$/.test(value) || !Number.isSafeInteger(Number(value))){ toast('Please enter a valid whole number.'); return; }
+    btn.disabled = true;
+    const { error } = await sb.rpc('cc_c3_set_person_total', { p_name: name, p_total_kg: Number(value) });
+    if(error){ console.error(error); toast(error.message || 'Could not update the score. Check the Supabase setup SQL.'); }
+    else { toast(`${name}'s score updated to ${fmt(Number(value))} kg.`); }
+    await refresh();
+  });
   $('submitBtn').addEventListener('click', openSheet);
   $('confirmBtn').addEventListener('click', confirmCarry);
   $('cancelBtn').addEventListener('click', closeSheet);
