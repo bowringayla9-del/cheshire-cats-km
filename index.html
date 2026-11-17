@@ -2,436 +2,609 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Task Three: Full-Scale Offensive</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d0d0f">
+<title>Challenge Three: Paint the Roses… Dead</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
   :root{
-    --bg: #1b0f20;
-    --surface: #26152d;
-    --surface-2: #331c3c;
-    --pink: #ff4fa3;
-    --pink-soft: #ff8cc6;
-    --pink-dim: #a62d6b;
-    --white: #fff7fb;
-    --text-dim: #d9b4cb;
-    --border: #46274f;
+    --bg:#0d0d0f; --panel:#151518; --panel-2:#1c1c20; --line:#2b2b31;
+    --text:#f3eee8; --dim:#a39b94; --faint:#6f6963;
+    --red:#b3121f; --red-bright:#d6232f; --red-dark:#5e0a12;
+    --gold:#c9a24a; --ok:#6fcf97;
+    --radius:18px;
   }
-  *{ box-sizing: border-box; }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
   body{
-    margin: 0; min-height: 100vh; padding: 28px 16px 80px;
-    color: var(--white); font-family: 'Inter', sans-serif;
+    margin:0; min-height:100vh; color:var(--text);
+    font-family:'Inter',system-ui,sans-serif; line-height:1.5; -webkit-font-smoothing:antialiased;
     background:
-      repeating-linear-gradient(115deg, rgba(255,79,163,0.07) 0 14px, transparent 14px 40px),
-      radial-gradient(900px 500px at 50% -10%, #3a1d45 0%, var(--bg) 60%);
+      radial-gradient(900px 420px at 50% -120px, rgba(179,18,31,.30), transparent 70%),
+      var(--bg);
+    padding-bottom: calc(60px + env(safe-area-inset-bottom));
   }
-  .wrap{ max-width: 640px; margin: 0 auto; }
+  .wrap{ max-width:980px; margin:0 auto; padding:0 16px; }
+  .num{ font-variant-numeric: tabular-nums lining-nums; font-feature-settings:'tnum','lnum'; }
 
-  .eyebrow{
-    font-family: 'JetBrains Mono', monospace; font-size: 12px; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--pink-soft); font-weight: 700;
+  /* ---------- nav ---------- */
+  nav.top{
+    position:sticky; top:0; z-index:20; backdrop-filter:blur(10px);
+    background:rgba(13,13,15,.82); border-bottom:1px solid var(--line);
   }
+  nav.top .wrap{ display:flex; gap:6px; overflow-x:auto; padding-top:10px; padding-bottom:10px; scrollbar-width:none; }
+  nav.top .wrap::-webkit-scrollbar{ display:none; }
+  nav.top a{
+    flex:none; color:var(--dim); text-decoration:none; font-size:13px; font-weight:600;
+    padding:7px 14px; border-radius:999px; border:1px solid transparent; letter-spacing:.02em;
+  }
+  nav.top a:hover, nav.top a:focus-visible{ color:var(--text); border-color:var(--line); outline:none; }
+  nav.top a.go{ margin-left:auto; background:var(--red); color:#fff; }
+  nav.top a.go:hover{ background:var(--red-bright); }
+
+  /* ---------- hero ---------- */
+  header.hero{ position:relative; padding:34px 0 8px; overflow:hidden; }
+  .watermark{ position:absolute; right:-40px; top:-10px; width:260px; height:260px; color:var(--red); opacity:.10; pointer-events:none; }
+  .kicker{
+    display:flex; align-items:center; gap:10px; color:var(--red-bright);
+    font-size:12px; font-weight:800; letter-spacing:.28em; text-transform:uppercase;
+  }
+  .kicker svg{ width:22px; height:22px; }
   h1{
-    font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 42px; line-height: 1.02;
-    margin: 6px 0 10px; color: var(--white);
+    font-family:'Playfair Display',Georgia,serif; font-weight:800; margin:10px 0 14px;
+    font-size:clamp(36px,9.5vw,68px); line-height:1.02; letter-spacing:-.01em;
   }
-  h1 .pink{ color: var(--pink); }
-
-  .parade{ font-size: 24px; margin: 0 0 18px; display:flex; flex-wrap: wrap; gap: 6px; align-items:center; }
-  .parade .c{ display:inline-block; animation: hop 2.2s ease-in-out infinite; }
-  .parade .c:nth-child(2){ animation-delay: .15s; } .parade .c:nth-child(3){ animation-delay: .3s; }
-  .parade .c:nth-child(4){ animation-delay: .45s; } .parade .c:nth-child(5){ animation-delay: .6s; }
-  .parade .c:nth-child(6){ animation-delay: .75s; } .parade .c:nth-child(7){ animation-delay: .9s; }
-  .parade .c:nth-child(8){ animation-delay: 1.05s; }
-  @keyframes hop{ 0%,70%,100%{ transform: translateY(0); } 85%{ transform: translateY(-7px); } }
-  @media (prefers-reduced-motion: reduce){ .parade .c{ animation: none; } }
-
-  .hero{ background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 20px; overflow: hidden; }
-  .track-svg{ width: 100%; height: auto; display: block; }
-  .hero-stats{ display:flex; justify-content: space-between; align-items: flex-end; margin-top: -6px; gap: 12px; }
-  .total-num{ font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 44px; line-height: 1; color: var(--pink); }
-  .total-label{ font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 4px; }
-  .meta{ font-size: 12px; color: var(--text-dim); margin-top: 3px; }
-  .goal-edit{ font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-dim); text-align: right; flex-shrink: 0; }
-  .goal-edit input{
-    width: 74px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
-    color: var(--white); font-family: 'JetBrains Mono', monospace; font-size: 13px; padding: 3px 6px; text-align: right;
+  h1 em{ color:var(--red-bright); font-style:italic; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+  .chip-info{
+    font-size:13px; font-weight:600; padding:6px 12px; border-radius:999px;
+    background:var(--panel); border:1px solid var(--line); color:var(--text);
   }
-  .quip{
-    margin-top: 16px; text-align: center; font-family: 'Fredoka', sans-serif; font-size: 16px;
-    color: var(--pink-soft); background: var(--surface-2); border-radius: 14px; padding: 10px 14px;
+  .pill{ font-size:12px; font-weight:800; letter-spacing:.14em; padding:6px 12px; border-radius:999px; border:1px solid var(--line); background:var(--panel-2); }
+  .pill[data-phase="live"]{ background:var(--red); border-color:var(--red-bright); color:#fff; }
+  .pill[data-phase="live"]::before{ content:''; display:inline-block; width:7px; height:7px; border-radius:50%; background:#fff; margin-right:7px; animation:blink 1.4s infinite; }
+  .pill[data-phase="closed"]{ border-color:var(--gold); color:var(--gold); }
+  @keyframes blink{ 50%{ opacity:.25; } }
+  .lede{ color:var(--dim); max-width:620px; margin:0 0 18px; font-size:15px; }
+  .countdown{
+    display:inline-flex; flex-direction:column; gap:2px; padding:12px 18px; border-radius:var(--radius);
+    background:linear-gradient(180deg,var(--panel-2),var(--panel)); border:1px solid var(--line);
+  }
+  .cd-label{ font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--dim); }
+  .cd-time{ font-size:34px; font-weight:800; letter-spacing:.02em; }
+
+  .thorns{ height:14px; margin:26px 0 22px; opacity:.55;
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='14'%3E%3Cpath d='M0 7h36' stroke='%23b3121f' stroke-width='1.5'/%3E%3Cpath d='M6 7l3-6 3 6M22 7l3 6 3-6' fill='%23b3121f'/%3E%3C/svg%3E") repeat-x center; }
+
+  /* ---------- stats ---------- */
+  .stats{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+  .stat{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px; min-width:0; }
+  .stat.big{ grid-column:1/-1; background:linear-gradient(135deg,rgba(179,18,31,.22),var(--panel) 60%); border-color:rgba(214,35,47,.35); }
+  .stat-label{ font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); }
+  .stat-val{ font-size:30px; font-weight:800; line-height:1.15; margin-top:4px; overflow-wrap:anywhere; }
+  .stat.big .stat-val{ font-size:clamp(46px,13vw,72px); line-height:1; }
+  .stat-val small{ font-size:.42em; font-weight:700; color:var(--dim); margin-left:4px; letter-spacing:.04em; }
+  .stat-val.txt{ font-family:'Playfair Display',serif; font-size:24px; }
+  @media(min-width:720px){
+    .stats{ grid-template-columns:1.6fr 1fr 1fr 1fr; }
+    .stat.big{ grid-column:auto; }
   }
 
-  .panel{ background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 22px; margin-top: 18px; }
-  .panel h2{ font-family: 'Fredoka', sans-serif; font-size: 22px; font-weight: 600; margin: 0 0 14px; display:flex; align-items:center; gap: 8px; }
-  .dot{ width: 10px; height: 10px; border-radius: 50%; background: var(--pink); display:inline-block; }
+  /* ---------- sections ---------- */
+  section{ margin-top:34px; scroll-margin-top:70px; }
+  .sec-head{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:12px; }
+  h2{ font-family:'Playfair Display',serif; font-weight:700; font-size:26px; margin:0; }
+  .sec-note{ font-size:12px; color:var(--dim); }
+  .card{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:18px; }
 
-  details.brief summary{ cursor: pointer; font-family: 'Fredoka', sans-serif; font-size: 20px; font-weight: 600; list-style: none; display:flex; align-items:center; gap: 8px; }
-  details.brief summary::-webkit-details-marker{ display:none; }
-  details.brief summary::after{ content: '＋'; margin-left: auto; color: var(--pink-soft); }
-  details.brief[open] summary::after{ content: '－'; }
-  .brief-body{ margin-top: 14px; font-size: 14px; line-height: 1.6; color: var(--white); }
-  .brief-body p{ margin: 0 0 10px; }
-  .pts-table{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
-  .pts-table div{ background: var(--surface-2); border-radius: 12px; padding: 10px; text-align:center; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
-  .pts-table b{ display:block; color: var(--pink); font-size: 20px; }
-  .sig{ color: var(--pink-soft); font-family: 'Fredoka', sans-serif; }
+  .layout{ display:grid; gap:34px; }
+  @media(min-width:860px){ .layout{ grid-template-columns:1.15fr 1fr; align-items:start; } .layout section{ margin-top:34px; } }
 
-  .field-label{ display:block; font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
-  input[type=text], input[type=number]{
-    width: 100%; background: var(--surface-2); border: 1px solid var(--border); color: var(--white);
-    border-radius: 12px; padding: 11px 12px; font-size: 15px; font-family: 'Inter', sans-serif;
+  /* ---------- leaderboard ---------- */
+  .final{
+    margin-bottom:12px; padding:14px 16px; border-radius:var(--radius);
+    border:1px solid var(--gold); background:linear-gradient(135deg,rgba(201,162,74,.16),rgba(179,18,31,.18));
+    font-family:'Playfair Display',serif; font-size:19px;
   }
-  input:focus{ outline: 2px solid var(--pink); outline-offset: 1px; }
-
-  .chips{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
-  .chip{
-    background: var(--surface-2); border: 2px solid var(--border); border-radius: 16px; padding: 12px 6px;
-    color: var(--white); cursor: pointer; font-family: 'Fredoka', sans-serif; font-size: 22px; font-weight: 600;
-    transition: transform .08s ease, border-color .15s ease, background .15s ease;
+  .final b{ color:var(--gold); }
+  ol.lb{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+  .lb-row{
+    display:grid; grid-template-columns:44px 1fr; gap:12px; align-items:center;
+    background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px 14px 14px 10px;
+    transition:transform .35s ease, border-color .35s ease;
   }
-  .chip small{ display:block; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; color: var(--text-dim); }
-  .chip:active{ transform: scale(0.96); }
-  .chip[aria-pressed="true"]{ background: var(--pink); border-color: var(--pink); color: #2a0a1a; }
-  .chip[aria-pressed="true"] small{ color: #4a1030; }
-
-  .vest{
-    display:flex; align-items:center; gap: 12px; background: var(--surface-2); border: 1px solid var(--border);
-    border-radius: 14px; padding: 12px 14px; cursor: pointer; margin-bottom: 14px; font-size: 14px; line-height: 1.35;
+  .lb-row.first{
+    border-color:rgba(201,162,74,.65);
+    background:linear-gradient(135deg,rgba(179,18,31,.28),var(--panel) 70%);
+    box-shadow:0 0 0 1px rgba(179,18,31,.25), 0 10px 30px -14px rgba(179,18,31,.7);
   }
-  .vest input{ width: 22px; height: 22px; accent-color: var(--pink); flex-shrink: 0; margin: 0; }
-  .vest b{ color: var(--pink-soft); }
+  .pos{ font-family:'Playfair Display',serif; font-size:30px; font-weight:800; text-align:center; color:var(--dim); }
+  .lb-row.first .pos{ color:var(--gold); }
+  .lb-top{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; }
+  .lb-name{ font-weight:700; font-size:17px; min-width:0; overflow-wrap:anywhere; }
+  .lb-row.first .lb-name::before{ content:'♛ '; color:var(--gold); }
+  .lb-kg{ font-size:26px; font-weight:800; flex:none; }
+  .lb-kg small{ font-size:13px; color:var(--dim); margin-left:3px; font-weight:700; }
+  .bar{ height:7px; border-radius:99px; background:var(--panel-2); margin:9px 0 7px; overflow:hidden; }
+  .bar i{ display:block; height:100%; border-radius:99px; background:linear-gradient(90deg,var(--red-dark),var(--red-bright)); transition:width .8s cubic-bezier(.2,.8,.2,1); }
+  .lb-row.first .bar i{ background:linear-gradient(90deg,var(--red-bright),var(--gold)); }
+  .lb-sub{ font-size:12px; color:var(--dim); display:flex; justify-content:space-between; gap:8px; }
+  .empty{ color:var(--dim); text-align:center; padding:26px 8px; font-size:14px; }
 
-  .preview{ font-family: 'Fredoka', sans-serif; font-size: 18px; text-align:center; margin-bottom: 12px; color: var(--white); }
-  .preview b{ color: var(--pink); font-size: 26px; }
-  .warn{ font-size: 13px; color: var(--pink-soft); text-align:center; margin-bottom: 10px; min-height: 0; }
-
-  .btn{
-    border: 1px solid var(--border); border-radius: 14px; padding: 13px 16px; width: 100%;
-    font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 17px; cursor: pointer;
-    color: #2a0a1a; background: var(--pink); border-color: var(--pink); transition: transform .08s ease, background .15s ease;
+  /* ---------- record form ---------- */
+  label.fl{ display:block; font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); margin:16px 0 8px; }
+  label.fl:first-of-type{ margin-top:0; }
+  .opts{ display:grid; gap:8px; grid-template-columns:repeat(2,1fr); }
+  .opts.w{ grid-template-columns:repeat(4,1fr); }
+  .opt{
+    min-height:52px; background:var(--panel-2); color:var(--text); border:1.5px solid var(--line); border-radius:14px;
+    font:700 16px 'Inter',sans-serif; cursor:pointer; padding:8px 6px; transition:transform .08s ease, border-color .15s, background .15s;
   }
-  .btn:hover{ background: #ff6bb2; }
-  .btn:active{ transform: scale(0.97) rotate(-1deg); }
+  .opt small{ font-size:11px; font-weight:600; color:var(--dim); margin-left:2px; }
+  .opt:active{ transform:scale(.96); }
+  .opt:focus-visible{ outline:2px solid var(--gold); outline-offset:2px; }
+  .opt[aria-pressed="true"]{ background:var(--red); border-color:var(--red-bright); color:#fff; }
+  .opt[aria-pressed="true"] small{ color:#ffd7da; }
+  .stepper{ display:flex; align-items:center; gap:10px; }
+  .stepper button{
+    width:56px; height:56px; border-radius:14px; border:1.5px solid var(--line); background:var(--panel-2);
+    color:var(--text); font-size:26px; font-weight:700; cursor:pointer;
+  }
+  .stepper button:active{ transform:scale(.94); }
+  .stepper output{ flex:1; text-align:center; font-size:34px; font-weight:800; }
+  input[type=text]{
+    width:100%; height:48px; padding:0 14px; border-radius:12px; border:1.5px solid var(--line);
+    background:var(--panel-2); color:var(--text); font:500 16px 'Inter',sans-serif;
+  }
+  input[type=text]:focus{ outline:2px solid var(--red-bright); outline-offset:1px; }
+  .summary{
+    margin:18px 0 14px; padding:14px 16px; border-radius:14px; background:var(--panel-2);
+    border:1px dashed rgba(214,35,47,.5); text-align:center;
+  }
+  .summary .eq{ font-size:13px; color:var(--dim); }
+  .summary .add{ font-size:36px; font-weight:800; color:#fff; line-height:1.15; }
+  .summary .add span{ color:var(--red-bright); }
+  .submit{
+    width:100%; min-height:60px; border:none; border-radius:16px; cursor:pointer;
+    background:linear-gradient(180deg,var(--red-bright),var(--red)); color:#fff;
+    font:800 15px 'Inter',sans-serif; letter-spacing:.14em; text-transform:uppercase;
+    box-shadow:0 12px 28px -12px rgba(214,35,47,.8); transition:transform .08s ease, filter .15s;
+  }
+  .submit:hover:not(:disabled){ filter:brightness(1.08); }
+  .submit:active:not(:disabled){ transform:scale(.98); }
+  .submit:disabled{ background:var(--panel-2); color:var(--faint); box-shadow:none; cursor:not-allowed; border:1px solid var(--line); }
+  .lock-note{ margin-top:10px; font-size:13px; color:var(--dim); text-align:center; min-height:19px; }
+  .ok{
+    margin-top:12px; padding:12px 14px; border-radius:12px; background:rgba(111,207,151,.10);
+    border:1px solid rgba(111,207,151,.4); color:var(--ok); font-size:14px; font-weight:600; text-align:center;
+  }
+  .ok[hidden]{ display:none; }
 
-  .board-row{ display:flex; align-items:center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
-  .board-row:last-child{ border-bottom: none; }
-  .rank{ font-family: 'JetBrains Mono', monospace; color: var(--text-dim); font-size: 13px; width: 18px; flex-shrink: 0; }
-  .avatar{ font-size: 24px; width: 30px; text-align:center; flex-shrink: 0; }
-  .board-main{ flex:1; min-width:0; }
-  .board-top{ display:flex; justify-content: space-between; align-items:center; font-size: 14px; margin-bottom: 5px; gap: 8px; }
-  .board-name{ font-weight: 600; min-width: 0; }
-  .tag{ display:block; font-size: 11px; font-weight: 500; color: var(--text-dim); }
-  .total-wrap{ display:flex; align-items:center; gap: 6px; flex-shrink: 0; }
-  .board-total{ font-family: 'JetBrains Mono', monospace; color: var(--pink-soft); }
-  .icon-btn{ background:none; border:none; cursor:pointer; font-size: 14px; padding: 0 2px; line-height:1; color: var(--pink-soft); opacity: .7; }
-  .icon-btn:hover{ opacity: 1; }
-  .bar-bg{ background: var(--surface-2); border-radius: 6px; height: 8px; overflow: hidden; }
-  .bar-fill{ background: linear-gradient(90deg, var(--pink-dim), var(--pink)); height: 100%; border-radius: 6px; }
-  .empty{ color: var(--text-dim); font-size: 14px; text-align:center; padding: 18px 0; }
+  /* ---------- recent ---------- */
+  ul.feed{ list-style:none; margin:0; padding:0; }
+  .feed li{ display:flex; justify-content:space-between; gap:12px; padding:11px 0; border-bottom:1px solid var(--line); font-size:14px; }
+  .feed li:last-child{ border-bottom:none; }
+  .feed b{ font-weight:800; }
+  .feed .when{ color:var(--dim); font-size:12px; white-space:nowrap; }
+  .feed .who{ color:var(--dim); font-size:12px; display:block; }
 
-  .runner{ text-align:center; font-size: 30px; margin-top: 34px; margin-bottom: 8px; letter-spacing: 4px; }
-  .finish{ height: 26px; border-radius: 6px; opacity: .9; background: repeating-conic-gradient(var(--white) 0% 25%, #1b0f20 0% 50%) 0 0 / 26px 26px; }
-  .finish-note{ text-align:center; font-size: 13px; color: var(--pink-soft); margin-top: 10px; font-family: 'Fredoka', sans-serif; }
-  .foot-note{ font-size: 11px; color: var(--text-dim); line-height: 1.6; text-align:center; margin-top: 18px; }
+  /* ---------- decree ---------- */
+  .decree{ font-size:15px; }
+  .decree h3{ font-family:'Playfair Display',serif; font-size:20px; margin:22px 0 6px; color:var(--red-bright); letter-spacing:.02em; }
+  .decree h3:first-child{ margin-top:0; }
+  .decree p{ margin:0 0 10px; color:#e3dcd4; }
+  .decree .queen{ font-family:'Playfair Display',serif; font-style:italic; font-size:19px; color:var(--text); }
+  .decree .sign{ font-family:'Playfair Display',serif; font-weight:800; letter-spacing:.06em; color:var(--red-bright); font-size:20px; margin-top:18px; }
+
+  details.manage summary{ cursor:pointer; color:var(--dim); font-size:13px; font-weight:600; padding:6px 0; }
+  .add-team{ display:flex; gap:8px; margin-top:10px; }
+  .add-team button{ flex:none; padding:0 18px; border-radius:12px; border:1.5px solid var(--line); background:var(--panel-2); color:var(--text); font:700 14px 'Inter',sans-serif; cursor:pointer; }
+
+  .setup-error{ margin:18px 0; padding:14px 16px; border-radius:14px; background:rgba(214,35,47,.12); border:1px solid var(--red-bright); font-size:14px; }
+  .setup-error[hidden]{ display:none; }
+
+  /* ---------- confirm sheet ---------- */
+  .sheet{ position:fixed; inset:0; z-index:50; display:flex; align-items:flex-end; justify-content:center; background:rgba(0,0,0,.72); backdrop-filter:blur(3px); }
+  .sheet[hidden]{ display:none; }
+  .sheet-card{
+    width:100%; max-width:480px; background:var(--panel); border:1px solid var(--line); border-radius:24px 24px 0 0;
+    padding:24px 20px calc(24px + env(safe-area-inset-bottom)); text-align:center; animation:rise .25s ease;
+  }
+  @media(min-width:600px){ .sheet{ align-items:center; } .sheet-card{ border-radius:24px; } }
+  @keyframes rise{ from{ transform:translateY(30px); opacity:0; } }
+  .sheet-card h3{ font-family:'Playfair Display',serif; margin:0 0 4px; font-size:24px; }
+  .sheet-big{ font-size:56px; font-weight:800; color:var(--red-bright); line-height:1.1; margin:8px 0 2px; }
+  .sheet-sub{ color:var(--dim); font-size:15px; margin-bottom:20px; }
+  .sheet-actions{ display:grid; gap:10px; }
+  .btn-ghost{ min-height:52px; border-radius:14px; border:1.5px solid var(--line); background:transparent; color:var(--text); font:700 15px 'Inter',sans-serif; cursor:pointer; }
 
   .toast{
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--surface-2);
-    border: 1px solid var(--pink); color: var(--white); padding: 10px 18px; border-radius: 12px; font-size: 13px;
-    opacity: 0; pointer-events: none; transition: opacity .25s ease; z-index: 50; max-width: 90vw; text-align:center;
+    position:fixed; left:50%; bottom:calc(20px + env(safe-area-inset-bottom)); transform:translateX(-50%) translateY(20px);
+    background:var(--panel-2); border:1px solid var(--red-bright); padding:11px 18px; border-radius:14px;
+    font-size:14px; font-weight:600; opacity:0; pointer-events:none; transition:all .25s ease; z-index:60; max-width:92vw; text-align:center;
   }
-  .toast.show{ opacity: 1; }
-  @media (max-width: 420px){ h1{ font-size: 34px; } .total-num{ font-size: 36px; } }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  footer{ margin-top:40px; text-align:center; color:var(--faint); font-size:12px; }
+  @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } html{ scroll-behavior:auto; } }
+  body[data-phase="closed"] .watermark{ opacity:.16; }
 </style>
 </head>
-<body>
+<body data-phase="before">
+
+<nav class="top" aria-label="Sections">
+  <div class="wrap">
+    <a href="#leaderboard">Top carriers</a>
+    <a href="#decree">The Decree</a>
+    <a href="#recent">Recent</a>
+    <a class="go" href="#record">Record a carry</a>
+  </div>
+</nav>
+
 <div class="wrap">
-  <div class="eyebrow">Task Three · Transmission from Alice</div>
-  <h1>Full-Scale <span class="pink">Offensive</span></h1>
-  <div class="parade" aria-hidden="true">
-    <span class="c">🐱</span><span class="c">😼</span><span class="c">🐈</span><span class="c">😹</span>
-    <span class="c">🙀</span><span class="c">😸</span><span class="c">🐈‍⬛</span><span class="c">😻</span>
-  </div>
-
-  <div class="hero">
-    <svg class="track-svg" viewBox="0 0 400 190" id="trackSvg">
-      <rect x="20" y="15" width="360" height="130" rx="65" ry="65" fill="none" stroke="#3b2146" stroke-width="26"/>
-      <rect id="trackFill" x="20" y="15" width="360" height="130" rx="65" ry="65"
-            fill="none" stroke="#ff4fa3" stroke-width="26" stroke-linecap="butt"/>
-      <line x1="200" y1="15" x2="200" y2="41" stroke="#fff7fb" stroke-width="3" opacity="0.8"/>
-      <path d="M158 62 Q168 52 178 62 Q168 58 158 62 Z" fill="#ff8cc6" stroke="#ff8cc6" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M222 62 Q232 52 242 62 Q232 58 222 62 Z" fill="#ff8cc6" stroke="#ff8cc6" stroke-width="2" stroke-linejoin="round"/>
-      <path d="M138 82 Q200 140 262 82 Q200 106 138 82 Z" fill="#fff7fb" stroke="#ff4fa3" stroke-width="3" stroke-linejoin="round"/>
-      <path d="M160 92 L160 99 M180 100 L180 108 M200 103 L200 111 M220 100 L220 108 M240 92 L240 99" stroke="#ff4fa3" stroke-width="2" stroke-linecap="round" opacity="0.7"/>
-      <path d="M126 76 L90 68 M126 84 L86 86 M128 92 L92 104" stroke="#ff8cc6" stroke-width="2" stroke-linecap="round"/>
-      <path d="M274 76 L310 68 M274 84 L314 86 M272 92 L308 104" stroke="#ff8cc6" stroke-width="2" stroke-linecap="round"/>
-      <path d="M192 70 L208 70 L200 78 Z" fill="#ff4fa3"/>
+  <header class="hero">
+    <svg class="watermark" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M32 8c-10 0-18 6-18 15 0 10 8 16 18 16s18-6 18-16c0-9-8-15-18-15z"/>
+      <path d="M32 15c-6 0-11 4-11 9 0 6 5 10 11 10s11-4 11-10c0-5-4-7-8-7s-6 2-6 6 3 5 5 5"/>
+      <path d="M32 39v21M32 48c-7-1-11-5-12-9M32 53c6-1 10-4 12-8"/>
     </svg>
-    <div class="hero-stats">
-      <div>
-        <div class="total-num" id="totalNum">0</div>
-        <div class="total-label">team points</div>
-        <div class="meta" id="meta">0 runners · 0 weight vests</div>
-      </div>
-      <div class="goal-edit">goal<br><input type="number" id="goalInput" min="1" value="100"> pts</div>
+    <div class="kicker">
+      <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M32 8c-10 0-18 6-18 15 0 10 8 16 18 16s18-6 18-16c0-9-8-15-18-15z"/><path d="M32 39v21M32 48c-7-1-11-5-12-9"/>
+      </svg>
+      Challenge Three
     </div>
-    <div class="quip" id="quip">The Resistance is warming up. Alice is watching.</div>
-  </div>
-
-  <div class="panel">
-    <details class="brief">
-      <summary>📡 Mission briefing</summary>
-      <div class="brief-body">
-        <p>Distance is what matters, not speed. Run hard, run steady, walk sections if you need to. Your mission is simply to complete your chosen distance.</p>
-        <div class="pts-table">
-          <div><b>3</b>3 km</div><div><b>4</b>4 km</div><div><b>6</b>6 km</div>
-        </div>
-        <p>🦺 Complete your run in an approved <b>5–11 kg weight vest</b> for <b>+3 points</b>. So 4 km + vest = 7 points, and 6 km + vest = 9 points.</p>
-        <p><b>One run score per person.</b> You can run again to challenge yourself, but only one run counts. Choose your route carefully.</p>
-        <p>Make sure your completed run and points are recorded correctly so your team keeps an accurate total.</p>
-        <p class="sig">Choose your distance. Complete your mission. Bring the points home. — Alice 🩵</p>
-      </div>
-    </details>
-  </div>
-
-  <div class="panel" id="logPanel">
-    <h2><span class="dot"></span>Put your score on the board 🐾</h2>
-    <label class="field-label" for="nameInput">Your name</label>
-    <input type="text" id="nameInput" list="nameList" placeholder="Type your name" maxlength="30" autocomplete="off" style="margin-bottom:14px">
-    <datalist id="nameList"></datalist>
-
-    <label class="field-label">Choose your distance</label>
+    <h1>Paint the Roses… <em>Dead</em></h1>
     <div class="chips">
-      <button class="chip" type="button" data-dist="3" aria-pressed="false">3 km<small>3 points</small></button>
-      <button class="chip" type="button" data-dist="4" aria-pressed="false">4 km<small>4 points</small></button>
-      <button class="chip" type="button" data-dist="6" aria-pressed="false">6 km<small>6 points</small></button>
+      <span class="chip-info">Team Cheshire Cats</span>
+      <span class="chip-info" id="dateChip">Wednesday 18th</span>
+      <span class="chip-info" id="hoursChip">04:00–19:00 NZ time</span>
+      <span class="pill" id="statusPill" data-phase="before">LOADING</span>
+    </div>
+    <p class="lede">Cheshire Cats: carry as much fertiliser as you can to the top of BFT Tauriko Hill. Every carry counts, and there is no maximum.</p>
+    <div class="countdown">
+      <span class="cd-label" id="cdLabel">Time remaining</span>
+      <span class="cd-time num" id="cdTime">--:--:--</span>
+    </div>
+  </header>
+
+  <div class="setup-error" id="setupError" hidden>
+    <b>Setup not finished.</b> The Challenge Three tables were not found. In Supabase, open SQL Editor and run <code>cheshire-challenge3-setup.sql</code>, then refresh this page.
+  </div>
+
+  <div class="thorns" aria-hidden="true"></div>
+
+  <div class="stats" aria-label="Cheshire Cats status">
+    <div class="stat big">
+      <div class="stat-label">Fertiliser carried · Cheshire Cats</div>
+      <div class="stat-val num" id="sTotal">0<small>kg</small></div>
+    </div>
+    <div class="stat"><div class="stat-label">Completed carries</div><div class="stat-val num" id="sCarries">0</div></div>
+    <div class="stat"><div class="stat-label">Average per carry</div><div class="stat-val num" id="sAvg">0<small>kg</small></div></div>
+    <div class="stat"><div class="stat-label">Last carry (NZ time)</div><div class="stat-val num" id="sLast">—</div></div>
+  </div>
+
+  <div class="layout">
+    <div>
+      <section id="leaderboard">
+        <div class="sec-head"><h2>Top carriers</h2><span class="sec-note" id="lbNote">Updates live</span></div>
+        <ol class="lb" id="lb"><li class="empty">Loading the court…</li></ol>
+      </section>
     </div>
 
-    <label class="vest" for="vest">
-      <input type="checkbox" id="vest">
-      <span>🦺 I wore an approved 5–11 kg weight vest <b>(+3 points)</b></span>
-    </label>
+    <div>
+      <section id="record">
+        <div class="sec-head"><h2>Record a carry</h2></div>
+        <div class="card">
+          <label class="fl" id="kgLbl">Kettlebell weight</label>
+          <div class="opts w" id="kgOpts" role="group" aria-labelledby="kgLbl"></div>
 
-    <div class="preview" id="preview">Pick a distance to see your score</div>
-    <div class="warn" id="warn"></div>
-    <button class="btn" id="submitBtn" type="button">Lock in my score</button>
+          <label class="fl" id="qtyLbl">Quantity carried together</label>
+          <div class="stepper" role="group" aria-labelledby="qtyLbl">
+            <button type="button" id="qMinus" aria-label="One fewer">−</button>
+            <output class="num" id="qVal" aria-live="polite">1</output>
+            <button type="button" id="qPlus" aria-label="One more">+</button>
+          </div>
+
+          <label class="fl" for="byInput">Your name (so you appear on Top carriers)</label>
+          <input type="text" id="byInput" maxlength="30" placeholder="Your name" autocomplete="given-name">
+
+          <div class="summary">
+            <div class="eq num" id="eq">Choose a team and a weight</div>
+            <div class="add num" id="addKg">+0<span> kg</span></div>
+          </div>
+
+          <button class="submit" id="submitBtn" type="button" disabled>Submit completed carry</button>
+          <div class="lock-note" id="lockNote"></div>
+          <div class="ok" id="okMsg" hidden></div>
+        </div>
+      </section>
+    </div>
   </div>
 
-  <div class="panel">
-    <h2><span class="dot" style="background:var(--white)"></span>Cat-egory rankings 👑</h2>
-    <div id="leaderboard"><div class="empty">No scores yet. Suspicious. Probably napping. 😴</div></div>
-  </div>
+  <section id="recent">
+    <div class="sec-head"><h2>Recent carries</h2><span class="sec-note">Latest 12</span></div>
+    <div class="card"><ul class="feed" id="feed"><li class="empty">No carries yet.</li></ul></div>
+  </section>
 
-  <div class="runner" aria-hidden="true">💨🐈 😼💨 🏁</div>
-  <div class="finish" aria-hidden="true"></div>
-  <div class="finish-note">The Resistance is making its full-scale push. Bring the points home.</div>
+  <section id="decree">
+    <div class="sec-head"><h2>The Decree</h2></div>
+    <div class="card decree">
+      <h3>The virus has killed my roses.</h3>
+      <p class="queen">Pathetic.</p>
+      <p>There is no point painting them red if they are too dead to bloom. So now I want to know which team can bring them back.</p>
 
-  <div class="foot-note">Everyone sees the same board. No login, so use your own name. One score per person: locking in again replaces your old score. Spotted a mistake? Tap ✎ on your row to load it, fix it, and lock it in again.</div>
+      <h3>Your task</h3>
+      <p>Between <b id="dHours">04:00–19:00</b>, your team must carry as much fertiliser as possible to the top of BFT Tauriko Hill.</p>
+      <p>The fertiliser is contained in the kettlebells. The weight stamped on each kettlebell is the amount of fertiliser you are carrying.</p>
+      <p>Every trip counts. Carry the kettlebells to the top of the hill, then bring them back down so they can be used again.</p>
+
+      <h3>The aim</h3>
+      <p>This is no longer about simply reaching a target. It is a competition. The team that carries the highest total kilograms of fertiliser by <b id="dEnd">19:00</b> wins Challenge Three.</p>
+      <p>There is no maximum. There is no reason to stop. If another team keeps moving, perhaps you should too.</p>
+      <p>Track every completed carry carefully and add the kettlebell weight to your team total.</p>
+      <p>At <span id="dEnd2">19:00</span>, the totals are locked. One team will have done more than the rest. One team will have given my roses the best chance of returning.</p>
+      <p>And the others? They had better hope I am feeling forgiving.</p>
+      <div class="sign">PAINT THE ROSES… DEAD.</div>
+    </div>
+  </section>
+
+  <footer>All times New Zealand. Totals are saved to the shared database and update live for everyone. ♥ ♠ ♦ ♣</footer>
 </div>
-<div class="toast" id="toast"></div>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+  <div class="sheet-card">
+    <h3 id="sheetTitle">Confirm completed carry</h3>
+    <div class="sheet-big num" id="sheetBig">+0 kg</div>
+    <div class="sheet-sub" id="sheetSub"></div>
+    <div class="sheet-actions">
+      <button class="submit" id="confirmBtn" type="button">Yes, add it to the total</button>
+      <button class="btn-ghost" id="cancelBtn" type="button">Go back</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function(){
-  // ---- Supabase config ----
+  // ---- Supabase (same project as the earlier challenges) ----
   const SUPABASE_URL = 'https://ktvccsdglgqtketqytsb.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_SPtO-5L4vs7SpxTONGF4TA_mOVGzPaD';
   const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  const VEST_BONUS = 3;
+  const TZ = 'Pacific/Auckland';
+  const DEFAULT_WEIGHTS = [8,12,16,20,24,28,32];
   const $ = id => document.getElementById(id);
-  const trackFill = $('trackFill');
-  const state = { scores: {}, goal: 100 };
-  let ringLength = 0, startShift = 0, selDist = null, armed = null;
 
-  const CATS = ['🐱','😼','🐈','😹','🙀','😸','🐈‍⬛','😻','😽','😾','🦁','🐯'];
-  const hash = s => { let h = 0; for(const ch of s) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h; };
-  const catFor = name => CATS[hash(name) % CATS.length];
-  const pick = arr => arr[Math.floor(Math.random() * arr.length)];
-  const calc = (d, v) => d ? d + (v ? VEST_BONUS : 0) : 0;
-  const plural = (n, w) => `${n} ${w}${n === 1 ? '' : 's'}`;
+  /*PURE-START*/
+  const pad = n => String(n).padStart(2, '0');
+  function calcTotal(kg, qty){ return kg * qty; }
+  function phaseFor(now, start, end){ return now < start ? 'before' : (now >= end ? 'closed' : 'live'); }
+  function fmtDur(ms){
+    const t = Math.max(0, Math.floor(ms / 1000));
+    return pad(Math.floor(t / 3600)) + ':' + pad(Math.floor(t % 3600 / 60)) + ':' + pad(t % 60);
+  }
+  function ordinal(n){
+    const v = n % 100;
+    if(v >= 11 && v <= 13) return n + 'th';
+    return n + (['th','st','nd','rd'][n % 10] || 'th');
+  }
+  function rankTeams(rows){
+    const sorted = rows.slice().sort((a, b) => b.total_kg - a.total_kg || b.carries - a.carries || a.team.localeCompare(b.team));
+    let pos = 0, prev = null;
+    return sorted.map((r, i) => {
+      if(prev === null || r.total_kg !== prev){ pos = i + 1; prev = r.total_kg; }
+      return Object.assign({}, r, { pos });
+    });
+  }
+  function leaders(ranked){
+    if(!ranked.length || ranked[0].total_kg <= 0) return [];
+    return ranked.filter(r => r.total_kg === ranked[0].total_kg);
+  }
+  /*PURE-END*/
 
+  const TEAM = 'Cheshire Cats';   // this page records carries for this team only
+  const state = { total: { total_kg: 0, carries: 0, last_at: null }, people: [], recent: [], settings: null, offset: 0, ready: false, setupMissing: false };
+  let selKg = null, qty = 1, pendingId = null, sending = false, lastPhase = null;
+
+  const fmt = n => Number(n).toLocaleString('en-NZ');
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const nowMs = () => Date.now() + state.offset;
+  function uuid(){
+    if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      const r = Math.random() * 16 | 0; return (c === 'x' ? r : (r & 3 | 8)).toString(16);
+    });
+  }
+  const store = {
+    get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+    set(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
+  };
   function toast(msg){
     const t = $('toast'); t.textContent = msg; t.classList.add('show');
-    clearTimeout(toast._t); toast._t = setTimeout(()=> t.classList.remove('show'), 2800);
+    clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 3200);
   }
-  function esc(s){ return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-  function findExisting(name){
-    const low = name.toLowerCase();
-    return Object.keys(state.scores).find(n => n.toLowerCase() === low) || null;
+  function nzParts(ms){
+    const o = {};
+    new Intl.DateTimeFormat('en-NZ', { timeZone: TZ, weekday: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+      .formatToParts(new Date(ms)).forEach(p => { o[p.type] = p.value; });
+    return o;
+  }
+  const nzTime = ms => { const p = nzParts(ms); return p.hour + ':' + p.minute; };
+  const phase = () => state.settings ? phaseFor(nowMs(), state.settings.start, state.settings.end) : 'before';
+  const weights = () => (state.settings && state.settings.weights && state.settings.weights.length) ? state.settings.weights : DEFAULT_WEIGHTS;
+
+  // ---------- rendering ----------
+  function renderHeader(){
+    const s = state.settings; if(!s) return;
+    const a = nzParts(s.start);
+    $('dateChip').textContent = a.weekday + ' ' + ordinal(parseInt(a.day, 10));
+    const hrs = nzTime(s.start) + '–' + nzTime(s.end);
+    $('hoursChip').textContent = hrs + ' NZ time';
+    $('dHours').textContent = hrs;
+    $('dEnd').textContent = nzTime(s.end);
+    $('dEnd2').textContent = nzTime(s.end);
   }
 
-  function quipFor(pct){
-    if(pct <= 0) return 'The Resistance is warming up. Alice is watching.';
-    if(pct < 0.25) return 'First wave deployed. The Underland has noticed.';
-    if(pct < 0.5) return 'The Red Queen is getting nervous.';
-    if(pct < 0.75) return 'Full-scale push underway. The cats are grinning.';
-    if(pct < 1) return 'Almost there. Bring the points home.';
-    return 'MISSION COMPLETE. The Resistance holds the field. 🏆';
-  }
-  function tagFor(s){
-    return `${s.distance} km${s.vest ? ' + 🦺 weight vest' : ''}`;
+  function renderStatus(){
+    const s = state.settings, ph = phase(), t = nowMs();
+    const pill = $('statusPill');
+    pill.dataset.phase = ph;
+    pill.textContent = !s ? 'LOADING' : ph === 'live' ? 'LIVE' : ph === 'before' ? 'OPENS SOON' : 'ENDED';
+    $('cdLabel').textContent = ph === 'before' ? 'Opens in' : ph === 'live' ? 'Time remaining' : 'Scheduled end passed';
+    $('cdTime').textContent = !s ? '--:--:--' : ph === 'before' ? fmtDur(s.start - t) : ph === 'live' ? fmtDur(s.end - t) : '00:00:00';
+    document.body.dataset.phase = ph;
   }
 
-  // Track: fixed dash offset starts at the white line; dash length grows clockwise.
-  function setupTrack(){
-    try{ ringLength = trackFill.getTotalLength(); }catch(e){ ringLength = 900; }
-    const w = parseFloat(trackFill.getAttribute('width')) || 0;
-    const rx = parseFloat(trackFill.getAttribute('rx')) || 0;
-    startShift = (w - 2 * rx) / 2;
-    trackFill.style.strokeDashoffset = ringLength - startShift;
-  }
-
-  function renderHero(){
-    const list = Object.values(state.scores);
-    const total = list.reduce((s, r) => s + r.points, 0);
-    const vests = list.filter(r => r.vest).length;
-    $('totalNum').textContent = total;
-    $('meta').textContent = `${plural(list.length, 'runner')} · ${plural(vests, 'weight vest')}`;
-    const pct = Math.max(0, Math.min(1, state.goal > 0 ? total / state.goal : 0));
-    const filled = ringLength * pct;
-    trackFill.style.strokeDasharray = `${filled} ${Math.max(0, ringLength - filled)}`;
-    $('quip').textContent = quipFor(pct);
-    $('goalInput').value = state.goal;
-  }
-
-  function renderNames(){
-    $('nameList').innerHTML = Object.keys(state.scores).sort((a,b)=> a.localeCompare(b))
-      .map(n => `<option value="${esc(n)}"></option>`).join('');
+  function renderStats(){
+    const t = state.total;
+    $('sTotal').innerHTML = fmt(t.total_kg) + '<small>kg</small>';
+    $('sCarries').textContent = fmt(t.carries);
+    $('sAvg').innerHTML = (t.carries ? fmt(Math.round(t.total_kg / t.carries * 10) / 10) : '0') + '<small>kg</small>';
+    $('sLast').textContent = t.last_at ? nzTime(new Date(t.last_at).getTime()) : '—';
   }
 
   function renderBoard(){
-    const el = $('leaderboard');
-    const rows = Object.entries(state.scores).map(([name, s]) => ({ name, ...s }))
-      .sort((a,b)=> b.points - a.points || a.name.localeCompare(b.name));
-    if(!rows.length){ el.innerHTML = '<div class="empty">No scores yet. Suspicious. Probably napping. 😴</div>'; return; }
-    const max = Math.max(...rows.map(r => r.points), 1);
-    el.innerHTML = rows.map((r,i)=>`
-      <div class="board-row">
-        <div class="rank">${i+1}</div>
-        <div class="avatar">${i === 0 ? '👑' : catFor(r.name)}</div>
-        <div class="board-main">
-          <div class="board-top">
-            <span class="board-name">${esc(r.name)}<span class="tag">${tagFor(r)}</span></span>
-            <span class="total-wrap">
-              <span class="board-total">${r.points} pts</span>
-              <button class="icon-btn" data-edit="${esc(r.name)}" type="button" title="Load to edit">✎</button>
-            </span>
-          </div>
-          <div class="bar-bg"><div class="bar-fill" style="width:${(r.points/max*100).toFixed(1)}%"></div></div>
-        </div>
-      </div>`).join('');
+    const lb = $('lb');
+    const ranked = rankTeams(state.people.map(p => ({ team: p.name, total_kg: p.total_kg, carries: p.carries })));
+    if(!ranked.length){ lb.innerHTML = '<li class="empty">Nobody on the board yet. Add your name when you record a carry.</li>'; return; }
+    const top = ranked[0].total_kg;
+    lb.innerHTML = ranked.map(r => {
+      const gap = r.pos === 1 ? (leaders(ranked).length > 1 ? 'Joint lead' : 'Top carrier') : fmt(top - r.total_kg) + ' kg behind';
+      const w = top > 0 ? Math.max(2, Math.round(r.total_kg / top * 100)) : 0;
+      return `<li class="lb-row${r.pos === 1 && top > 0 ? ' first' : ''}">
+        <div class="pos num">${r.pos}</div>
+        <div>
+          <div class="lb-top"><span class="lb-name">${esc(r.team)}</span><span class="lb-kg num">${fmt(r.total_kg)}<small>kg</small></span></div>
+          <div class="bar"><i style="width:${w}%"></i></div>
+          <div class="lb-sub num"><span>${fmt(r.carries)} carr${r.carries === 1 ? 'y' : 'ies'}</span><span>${gap}</span></div>
+        </div></li>`;
+    }).join('');
   }
 
-  function renderAll(){ renderHero(); renderNames(); renderBoard(); }
-
-  function renderPreview(){
-    const pts = calc(selDist, $('vest').checked);
-    $('preview').innerHTML = selDist
-      ? `Your score: <b>${pts}</b> point${pts === 1 ? '' : 's'}`
-      : 'Pick a distance to see your score';
-    const name = $('nameInput').value.trim();
-    const ex = name ? findExisting(name) : null;
-    $('warn').textContent = ex ? `${ex} already has ${state.scores[ex].points} points on the board. Locking in again replaces it.` : '';
-  }
-  function disarm(){
-    armed = null; $('submitBtn').textContent = 'Lock in my score'; renderPreview();
+  function renderFeed(){
+    const f = $('feed');
+    if(!state.recent.length){ f.innerHTML = '<li class="empty">No carries yet.</li>'; return; }
+    f.innerHTML = state.recent.map(c => `<li>
+      <span><b class="num">${c.quantity > 1 ? c.quantity + ' × ' : ''}${c.kettlebell_kg} kg</b>${c.recorded_by ? `<span class="who">by ${esc(c.recorded_by)}</span>` : ''}</span>
+      <span class="when num">+${fmt(c.total_kg)} kg · ${nzTime(new Date(c.created_at).getTime())}</span></li>`).join('');
   }
 
-  async function loadAll(){
+  function renderForm(){
+    $('kgOpts').innerHTML = weights().map(w => `<button type="button" class="opt num" data-kg="${w}" aria-pressed="${w === selKg}">${w}<small>kg</small></button>`).join('');
+    $('qVal').textContent = qty;
+    renderSummary();
+  }
+
+  function canSubmit(){ return !!(selKg && qty >= 1 && !sending && state.ready); }
+  function renderSummary(){
+    const total = selKg ? calcTotal(selKg, qty) : 0;
+    $('eq').textContent = selKg ? `${TEAM} · ${selKg} kg × ${qty}` : 'Choose the kettlebell weight';
+    $('addKg').innerHTML = '+' + fmt(total) + '<span> kg</span>';
+    $('submitBtn').disabled = !canSubmit();
+    $('lockNote').textContent = !selKg ? 'Pick the kettlebell weight.' : '';
+  }
+
+  function renderAll(){ renderHeader(); renderStatus(); renderStats(); renderBoard(); renderFeed(); renderForm(); }
+
+  // ---------- data ----------
+  async function refresh(){
     try{
-      const { data, error } = await sb.from('cc_t3_scores').select('*');
-      if(error) throw error;
-      state.scores = {};
-      (data || []).forEach(r => {
-        state.scores[r.name] = { distance: r.distance_km, vest: !!r.vest, points: Number(r.points) || calc(r.distance_km, r.vest) };
-      });
-      const s = await sb.from('cc_t3_settings').select('*').eq('id', 1).maybeSingle();
-      if(s.error) throw s.error;
-      if(s.data) state.goal = Number(s.data.goal_points) || 100;
+      const [tot, ppl, rec, set, now] = await Promise.all([
+        sb.from('cc_c3_totals').select('*').eq('team', TEAM).maybeSingle(),
+        sb.from('cc_c3_people').select('*'),
+        sb.from('cc_c3_carries').select('kettlebell_kg,quantity,total_kg,recorded_by,created_at').eq('team', TEAM).order('created_at', { ascending: false }).limit(12),
+        sb.from('cc_c3_settings').select('*').eq('id', 1).maybeSingle(),
+        sb.rpc('cc_c3_now')
+      ]);
+      if(tot.error || set.error){ throw (tot.error || set.error); }
+      if(!now.error && now.data) state.offset = new Date(now.data).getTime() - Date.now();
+      state.total = tot.data ? { total_kg: Number(tot.data.total_kg) || 0, carries: Number(tot.data.carries) || 0, last_at: tot.data.last_at } : { total_kg: 0, carries: 0, last_at: null };
+      state.people = ppl.error ? [] : (ppl.data || []).map(r => ({ name: r.name, total_kg: Number(r.total_kg) || 0, carries: Number(r.carries) || 0 }));
+      state.recent = rec.data || [];
+      if(set.data){
+        state.settings = { start: new Date(set.data.starts_at).getTime(), end: new Date(set.data.ends_at).getTime(), weights: (set.data.weights || []).map(Number).filter(n => n > 0) };
+      }
+      state.setupMissing = !(set.data && tot.data);
+      state.ready = true;
     }catch(e){
-      console.error(e); toast('Could not load the scoreboard. Check the Supabase setup.');
+      console.error(e);
+      if(state.ready) toast('Connection hiccup. Showing the last known totals.');
+      else state.setupMissing = true;
     }
+    $('setupError').hidden = !state.setupMissing;
+    lastPhase = phase();
     renderAll();
   }
 
-  async function submit(){
-    const raw = $('nameInput').value.trim().replace(/\s+/g, ' ');
-    if(!raw){ toast('Type your name first. Cats are not allowed to be anonymous.'); return; }
-    if(!selDist){ toast('Choose your distance first.'); return; }
-    const vest = $('vest').checked;
-    const existing = findExisting(raw);
-    const name = existing || raw;
+  // ---------- submitting ----------
+  function openSheet(){
+    if(!canSubmit()) return;
+    pendingId = uuid();
+    $('sheetBig').textContent = '+' + fmt(calcTotal(selKg, qty)) + ' kg';
+    $('sheetSub').textContent = `${TEAM} · ${qty} × ${selKg} kg`;
+    $('sheet').hidden = false; $('confirmBtn').disabled = false; $('confirmBtn').focus();
+  }
+  function closeSheet(){ $('sheet').hidden = true; }
 
-    if(existing && armed !== name){
-      armed = name;
-      $('submitBtn').textContent = 'Tap again to replace my score';
-      $('warn').textContent = `${name} already has ${state.scores[name].points} points. Only one run counts, so this will replace it.`;
-      return;
-    }
+  async function confirmCarry(){
+    if(sending || !pendingId) return;
+    sending = true; $('confirmBtn').disabled = true; $('submitBtn').disabled = true;
+    const by = $('byInput').value.trim().replace(/\s+/g, ' ').slice(0, 30) || null;
+    store.set('c3_by', by || '');
+    const added = calcTotal(selKg, qty), label = `${qty > 1 ? qty + ' × ' : ''}${selKg} kg`;
     try{
-      const { error } = await sb.from('cc_t3_scores').upsert(
-        { name, distance_km: selDist, vest, updated_at: new Date().toISOString() },
-        { onConflict: 'name' }
-      );
-      if(error) throw error;
-      const points = calc(selDist, vest);
-      state.scores[name] = { distance: selDist, vest, points };
-      armed = null; $('submitBtn').textContent = 'Lock in my score';
-      renderAll(); renderPreview();
-      toast(`${name} banks ${points} points. ` + pick([
-        'The Red Queen felt that.',
-        'Alice has been notified.',
-        'The Underland has no idea what hit it.',
-        'Cheshire grin intensifies.',
-        'Points brought home. 🐾'
-      ]));
-    }catch(e){ console.error(e); toast('Could not save that score. Try again.'); }
+      const { error } = await sb.from('cc_c3_carries').insert({ id: pendingId, team: TEAM, kettlebell_kg: selKg, quantity: qty, recorded_by: by });
+      if(error && error.code !== '23505'){
+        if(/row-level security|policy/i.test(error.message || '')){ toast('The database refused that carry. Run the update SQL, then try again.'); }
+        else { throw error; }
+      } else {
+        closeSheet(); pendingId = null;
+        const ok = $('okMsg');
+        ok.textContent = `✔ Recorded: +${fmt(added)} kg for ${TEAM} (${label}) at ${nzTime(nowMs())}`; ok.hidden = false;
+        toast(`+${fmt(added)} kg for ${TEAM}`);
+        qty = 1;
+      }
+    }catch(e){
+      console.error(e); toast('Could not save that carry. Check your signal and try again.');
+    }
+    await refresh();
+    setTimeout(() => { sending = false; renderSummary(); }, 1200);
   }
 
-  // ---- wiring ----
-  document.querySelectorAll('.chip').forEach(chip => chip.addEventListener('click', ()=>{
-    selDist = parseInt(chip.dataset.dist, 10);
-    document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', String(c === chip)));
-    disarm();
-  }));
-  $('vest').addEventListener('change', disarm);
-  $('nameInput').addEventListener('input', disarm);
-  $('submitBtn').addEventListener('click', submit);
-  $('nameInput').addEventListener('keydown', e => { if(e.key === 'Enter') submit(); });
+  // ---------- wiring ----------
+  $('kgOpts').addEventListener('click', e => { const b = e.target.closest('[data-kg]'); if(!b) return; selKg = parseInt(b.dataset.kg, 10); $('okMsg').hidden = true; renderForm(); });
+  $('qMinus').addEventListener('click', () => { qty = Math.max(1, qty - 1); $('qVal').textContent = qty; renderSummary(); });
+  $('qPlus').addEventListener('click', () => { qty = Math.min(20, qty + 1); $('qVal').textContent = qty; renderSummary(); });
+  $('submitBtn').addEventListener('click', openSheet);
+  $('confirmBtn').addEventListener('click', confirmCarry);
+  $('cancelBtn').addEventListener('click', closeSheet);
+  $('sheet').addEventListener('click', e => { if(e.target === $('sheet')) closeSheet(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeSheet(); });
 
-  $('leaderboard').addEventListener('click', e => {
-    const b = e.target.closest('[data-edit]');
-    if(!b) return;
-    const name = b.dataset.edit, s = state.scores[name];
-    if(!s) return;
-    $('nameInput').value = name;
-    selDist = s.distance;
-    document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', String(parseInt(c.dataset.dist, 10) === s.distance)));
-    $('vest').checked = s.vest;
-    disarm();
-    $('logPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    toast(`Loaded ${name}'s score. Change it, then lock it in again.`);
-  });
+  const savedBy = store.get('c3_by'); if(savedBy) $('byInput').value = savedBy;
 
-  let goalT;
-  $('goalInput').addEventListener('change', ()=>{
-    const v = Math.round(parseFloat($('goalInput').value));
-    if(!(v > 0)) return;
-    state.goal = v; renderHero();
-    clearTimeout(goalT);
-    goalT = setTimeout(async ()=>{
-      const { error } = await sb.from('cc_t3_settings').upsert({ id: 1, goal_points: v });
-      if(error){ console.error(error); toast('Could not save the goal.'); }
-    }, 400);
-  });
+  // live updates + backup polling
+  try{
+    sb.channel('c3-live')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'cc_c3_carries' }, () => refresh())
+      .subscribe();
+  }catch(e){ console.warn('Realtime unavailable, using polling', e); }
+  setInterval(() => { if(!document.hidden) refresh(); }, 15000);
+  document.addEventListener('visibilitychange', () => { if(!document.hidden) refresh(); });
 
-  setupTrack();
-  window.addEventListener('resize', ()=>{ setupTrack(); renderHero(); });
-  renderPreview();
-  loadAll();
+  // clock tick: countdown only (nothing is locked)
+  setInterval(() => {
+    renderStatus();
+    const ph = phase();
+    if(ph !== lastPhase){ lastPhase = ph; renderAll(); }
+  }, 1000);
+
+  renderAll();
+  refresh();
 })();
 </script>
 </body>
